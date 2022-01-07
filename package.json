@@ -1,0 +1,34 @@
+{
+  "name": "ipart",
+  "version": "1.0.0",
+  "description": "Interactive Particle Token",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "esbuild": "^0.14.10",
+    "esbuild-dev-server": "^0.3.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "esbuild ./wap/src/index.js --bundle --outfile=./wap/dist/index.js",
+    "dev": "node esbuild.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eyeree/IParT.git"
+  },
+  "keywords": [
+    "html",
+    "canvas",
+    "particle",
+    "nft",
+    "token",
+    "interactive"
+  ],
+  "author": "eyeree",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/eyeree/IParT/issues"
+  },
+  "homepage": "https://github.com/eyeree/IParT#readme"
+}
