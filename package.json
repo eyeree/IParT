@@ -9,9 +9,8 @@
     "esbuild-dev-server": "^0.3.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "esbuild ./wap/src/index.js --bundle --outfile=./wap/dist/index.js",
-    "dev": "node esbuild.config.js"
+    "build": "node esbuild.config.js build",
+    "dev": "node esbuild.config.js dev"
   },
   "repository": {
     "type": "git",
