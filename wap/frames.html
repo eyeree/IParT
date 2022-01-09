@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>IParT</title>
+    <script type="module" src="./dist/frames.js"></script>
+    <style>
+        body { 
+            background-color: dimgrey; 
+            color: black; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        iframe {
+            height: 500px;
+            width: 508px;
+            margin: 3px;
+        }
+        .row {
+          display: flex;
+          flex-direction: row;
+        }
+        .controls {
+          margin: 4px;
+          align-items: center;
+          justify-content: center;
+        }
+        .controls > span {
+          margin-left: 10px;
+          margin-right: 10px;
+          display: flex;
+        }
+        .controls > span > span {
+          margin-right: 3px
+        }
+        .button {
+          border:black 1px solid;
+          background:darkslategray;
+          color:lightgray;
+          padding: 2px 6px;
+          cursor: pointer;
+        }
+    </style>
+  </head>
+  <body>
+    <div class="row">
+      <iframe id="f1" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="" frameborder="0" height="500" sandbox="allow-scripts" width="508"></iframe>
+      <iframe id="f2" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="" frameborder="0" height="500" sandbox="allow-scripts" width="508"></iframe>
+      <iframe id="f3" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="" frameborder="0" height="500" sandbox="allow-scripts" width="508"></iframe>
+    </div>
+    <div class="row">
+      <iframe id="f4" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="" frameborder="0" height="500" sandbox="allow-scripts" width="508"></iframe>
+      <iframe id="f5" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="" frameborder="0" height="500" sandbox="allow-scripts" width="508"></iframe>
+      <iframe id="f6" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="" frameborder="0" height="500" sandbox="allow-scripts" width="508"></iframe>
+    </div>
+    <div class="row controls">
+      <span><span>Showing Tokens</span><span id="from_token"></span><span>to</span><span id="to_token"></span></span>
+      <span id="prev_page" class="button">Prev Page</span>
+      <span id="next_page" class="button">Next Page</span>
+      <span><span id="goto" class="button">Goto:</span><input type=text id="goto_token"/></span>
+    </div>
+  </body>
+</html>

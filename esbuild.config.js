@@ -1,29 +1,20 @@
-const {build} = require("esbuild")
-const esBuildDevServer = require("esbuild-dev-server")
+const {build, serve} = require("esbuild")
 
 const mode = process.argv[2] || "build";
 
-const buildResult = build(
-    {
-        entryPoints: ["wap/src/index.ts"],
-        outdir: "wap/dist",
-        incremental: mode == "dev",
-        // and more options ...
-    }
-);
+const buildOptions = {
+    entryPoints: ["wap/src/frames.ts", "wap/src/index.ts"],
+    outdir: "wap/dist",
+    sourcemap: true,
+    // incremental: mode == "dev",
+}
 
-if (mode == "dev") {
-    esBuildDevServer.start(
-        buildResult,
-        {
-            port:      "8080",
-            watchDir:  "wap/src",
-            index:     "wap/index.html",
-            staticDir: "wap",
-            onBeforeRebuild: {},
-            onAfterRebuild:  {},
-        }
-    )
+const serveOptions = {
+    servedir: "wap"
+}
+
+if(mode == "build") {
+    build(buildOptions).catch(() => process.exit(1));
 } else {
-    buildResult.catch(() => process.exit(1));
+    serve(serveOptions, buildOptions);
 }

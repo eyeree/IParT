@@ -2,15 +2,12 @@
   "name": "ipart",
   "version": "1.0.0",
   "description": "Interactive Particle Token",
-  "dependencies": {
-  },
   "devDependencies": {
-    "esbuild": "^0.14.10",
-    "esbuild-dev-server": "^0.3.0"
+    "esbuild": "^0.14.10"
   },
   "scripts": {
     "build": "node esbuild.config.js build",
-    "dev": "node esbuild.config.js dev"
+    "serve": "node esbuild.config.js serve"
   },
   "repository": {
     "type": "git",
