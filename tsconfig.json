@@ -1,6 +1,8 @@
 {
     "compilerOptions": {
-        "outDir": "dist"
+        "outDir": "dist",
+        "strict": true,
+        "target": "ES6"
     },
     "include": ["wap/**/*.ts"]
 }
