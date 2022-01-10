@@ -17,9 +17,18 @@ window.onload = () => {
     const prevPage = document.getElementById("prev_page") as HTMLSpanElement;
     prevPage.onclick = () => load(firstTokenId - f.length);
 
-    const gotoToken = document.getElementById("goto_token") as HTMLInputElement;
     const goto = document.getElementById("goto") as HTMLSpanElement;
     goto.onclick = () => load(Number.parseInt(gotoToken.value));
+
+    const gotoToken = document.getElementById("goto_token") as HTMLInputElement;
+    gotoToken.onkeyup = event => {
+        console.log("event", event);
+        if (event.key === "Enter") {
+            event.preventDefault();
+            goto.click();
+        }
+    }
+
 
     let firstTokenId = 0;
     function load(fromTokenId:number) {
@@ -30,7 +39,6 @@ window.onload = () => {
         gotoToken.value = firstTokenId.toString();
         for(let i = 0; i < f.length; ++i) {
             f[i].setAttribute('src', `index.html#${firstTokenId + i}`);
-            // f[i].contentWindow?.location.reload();
         }
     }
 

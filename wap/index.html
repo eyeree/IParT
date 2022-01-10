@@ -19,12 +19,128 @@
             height: 100vh;
             width: 100vw;
             animation: fadeIn 2s;
+            z-index: 1;
         }
         @keyframes fadeIn {
               0% {opacity:0;}
             100% {opacity:1;}
         }
-    </style>
+        .hidden {
+          display:none
+        }
+        #info {
+          z-index: 2;
+        }
+        
+        section {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background:black;
+          border:rebeccapurple ridge 2px;
+          padding: 20px;
+          margin: 3px;
+          color:lightgray;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+        section > h1 {
+          margin:0;
+        }
+        section > div {
+          width: 100%;
+        }
+
+        a {
+          color:lightslategray
+        }
+
+        dl {
+          display: grid;
+          grid-template-columns: max-content auto;
+        }
+        dt {
+          grid-column-start: 1;
+        }
+        dd {
+          grid-column-start: 2;
+          margin-left: 3px;
+          text-align: right;
+        }
+
+        #full_screen {
+          position: absolute;
+          top: 0;
+          right: 0;
+          border-bottom-left-radius: 50%;
+          padding-right: 5px;
+          padding-top: 5px;
+          align-items: end;
+          justify-content: start;
+        }
+
+        #show_info {
+          position: absolute;
+          bottom: 0;
+          right: 0;
+          border-top-left-radius: 50%;
+          padding-right: 5px;
+          padding-bottom: 5px;
+          font-size: 30px;
+          align-items: end;
+          justify-content: end;
+        }
+
+        .corner {
+          background: black;
+          z-index: 2;
+          width: 40px;
+          height: 40px;
+          flex-direction: column;
+          display: flex;
+          opacity: 0;
+          transition: opacity 1s ease-in-out;
+        }
+
+        .corner:hover {
+          opacity: 0.8;
+          transition: opacity .5s ease-in-out;
+        }
+
+     </style>
   </head>
-  <body><span>(loading...)</span></body>
+  <body>
+    <span>(loading...)</span>
+    <section id="info" class="hidden">
+      <h1>IParT #<span id="token_id"></span></h1>
+      <nav><a href="https://eyeree.me/IParT" target="top">info</a></nav>
+      <dl>
+        <dt>fps:</dt>
+        <dd id="fps">90</dd>
+        <dt>particles:</dt>
+        <dd id="particles">3000</dd>
+      </dl>
+    </section>
+    <div id="full_screen" class="corner">
+      <svg width="30" height="30" xmlns="http://www.w3.org/2000/svg">
+        <rect id="svg_11" height="12" width="4" y="18" x="26" stroke-width="0" stroke="#000000" fill="dimgray"/>
+        <rect id="svg_13" height="12" width="4" y="0" x="26" stroke-width="0" stroke="#000000" fill="dimgray"/>
+        <rect id="svg_14" height="12" width="4" y="18" x="0" stroke-width="0" stroke="#000000" fill="dimgray"/>
+        <rect id="svg_15" height="12" width="4" y="0" x="0" stroke-width="0" stroke="#000000" fill="dimgray"/>
+        <rect id="svg_16" height="4" width="12" y="26" x="18" stroke-width="0" stroke="#000000" fill="dimgray"/>
+        <rect id="svg_17" height="4" width="12" y="0" x="0" stroke-width="0" stroke="#000000" fill="dimgray"/>
+        <rect id="svg_18" height="4" width="12" y="0" x="18" stroke-width="0" stroke="#000000" fill="dimgray"/>
+        <rect id="svg_19" height="4" width="12" y="26" x="0" stroke-width="0" stroke="#000000" fill="dimgray"/>
+       </svg>
+    </div>
+    <div id="show_info" class="corner">
+      <svg width="30" height="30" xmlns="http://www.w3.org/2000/svg">
+        <ellipse stroke="dimgray" ry="14" rx="14" id="svg_20" cy="15" cx="15" stroke-width="2" fill="none"/>
+        <rect id="svg_15" height="12" width="4" y="12.23529" x="13" stroke-width="0" stroke="#000000" fill="dimgray"/>
+        <ellipse stroke-width="0" ry="2.35294" rx="2.23529" id="svg_22" cy="8.52941" cx="15" stroke="#000000" fill="dimgray"/>
+       </svg>
+    </div>
+  </body>
 </html>

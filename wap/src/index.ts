@@ -4,9 +4,9 @@ function handleError(e:any) {
     document.body.replaceChildren(span);
 }
 
-window.onhashchange = () => window.location.reload();
-
 try {
+
+    window.onhashchange = () => window.location.reload();
 
     const tokenId = getTokenId();
 
@@ -14,6 +14,7 @@ try {
         try {
             const tokenId = Number.parseInt(window.location.hash.substring(1));
             if(isNaN(tokenId)) {
+                return 1;
                 throw new Error(`could not parse "${window.location.hash.substring(1)}" as an integer`);
             }
             return tokenId;
@@ -461,6 +462,8 @@ try {
         constructor() {
         }
 
+        public get count() { return this.particles.size; }
+
         update(seconds: number) {
             for(const particle of this.particles) {
                 particle.update(seconds);
@@ -529,88 +532,6 @@ try {
 
     }
 
-    /*
-    class TopEmitter extends Emitter {
-
-        constructor(protected context:Context, private particles:ParticleSet) {
-            super(context);
-        }
-
-        protected emit() {
-            const gravity:number = 40;
-            const damper:number = 0.1;
-        
-            const minRadius = 3;
-            const maxRadius = 5;
-            const radius = randf(minRadius, maxRadius);
-            const perRadius = radius / maxRadius;
-            const maxGravity = gravity * perRadius;
-
-            const maxLife = 20 + (40 * perRadius);
-            let life:number = Number.MAX_VALUE;
-
-            const particle = new Particle();
-
-            particle.x = randf(0, this.canvasWidth-1);
-            particle.y = 0;
-            particle.dx = 0;
-            particle.dy = maxGravity;
-            particle.radius = radius;
-            particle.style = "white";
-
-            particle.update = seconds => {
-
-                if(life == Number.MAX_VALUE) {
-
-                    if(particle.dy <= 0) {
-                        particle.dy += maxGravity * seconds;
-                        if(particle.dy > maxGravity) particle.dy = maxGravity;
-                    }
-                
-                    particle.y += particle.dy * seconds;
-                    if(particle.y >= this.canvasHeight-1-particle.radius) {
-
-                        particle.y = this.canvasHeight-1-particle.radius;
-
-                        if(particle.dx == 0) {
-                            particle.dx = randf(-15, 15);
-                        } else {
-                            particle.dx *= damper;
-                        }
-
-                        particle.dy = -(particle.dy * damper);
-                        if(particle.dy > -1) {
-                            life = maxLife
-                        }
-                    }
-
-                    particle.x += particle.dx * seconds;
-
-                } else {
-
-                    life -= seconds;
-
-                    particle.radius = radius * (life / maxLife);
-
-                    particle.y = this.canvasHeight-1-particle.radius;
-
-                }
-
-                if(particle.radius <= 0 || particle.x < 0 - particle.radius || particle.x > this.canvasWidth - 1 + particle.radius) {
-                    this.particles.remove(particle);
-                }
-
-            }
-            
-            particle.draw = () => {
-            }
-
-            this.particles.add(particle);
-        }
-
-    }
-    */
-
     class Background extends ContextBase {
 
         constructor(protected context:Context) {
@@ -620,6 +541,103 @@ try {
         public update(seconds:number) {
             this.context.fillStyle = BACKGROUND_COLOR;
             this.context.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
+        }
+
+    }
+
+    class Info {
+
+        private readonly info = document.getElementById("info")! as HTMLDivElement;
+        private readonly stat_fps = document.getElementById("fps") as HTMLSpanElement;
+        private readonly stat_particles = document.getElementById("particles") as HTMLSpanElement;
+        private readonly token_id = document.getElementById("token_id") as HTMLSpanElement;
+
+        private interval = -1;
+
+        private count = 0;
+        private elapsed = 0;
+        private fps = 0;
+
+        constructor(private tokenId:number, private particles:ParticleSet) {
+            this.token_id.innerText = tokenId.toString();
+        }
+
+        private updateInfo() {
+            this.stat_fps.innerText = Math.round(this.fps).toString();
+            this.stat_particles.innerText = this.particles.count.toString();
+        }
+                    
+        showInfo() {
+            this.updateInfo();
+            this.info.classList.remove("hidden");
+            this.interval = setInterval(() => this.updateInfo(), 1000);
+        }
+
+        hideInfo() {
+            this.info.classList.add("hidden");   
+            clearInterval(this.interval);
+            this.interval = -1;
+        }
+
+        countFrame(seconds:number) {
+            this.count++;
+            this.elapsed += seconds;
+            if(this.elapsed >= 1) {
+                this.fps = this.count;
+                this.count = 0;
+                this.elapsed = 0;
+            }    
+        }
+
+        get isVisible() { return this.interval != -1; }
+
+    }
+
+    class Mouse {
+
+        private readonly show_info = document.getElementById("show_info")! as HTMLDivElement;
+        private readonly full_screen = document.getElementById("full_screen")! as HTMLDivElement;
+
+        constructor(private info:Info, private canvas:HTMLCanvasElement) {
+
+            window.onmousemove = event => {
+                console.log("mouse", event.x, event.y);
+            };
+
+            window.onmousedown = event => {
+                if(event.target == canvas && this.info.isVisible) {
+                    this.info.hideInfo();
+                }
+            };
+
+            window.onmouseup = event => {
+
+            }
+
+            this.show_info.onclick = () => {
+                if(info.isVisible) {
+                    info.hideInfo();
+                } else {
+                    info.showInfo();
+                }
+            }
+
+            if(document.fullscreenEnabled) {
+                this.full_screen.onclick = () => {
+
+                    var elem = document.documentElement;
+
+                    if(document.fullscreenElement) {
+                        document.exitFullscreen();
+                    } else {
+                        document.documentElement.requestFullscreen();
+                    }
+
+                }
+            } else {
+                this.full_screen.classList.add("hidden");
+            }
+
         }
 
     }
@@ -640,19 +658,22 @@ try {
             window.onresize = setSize;
             setSize();
 
-            document.body.appendChild(canvas);    
-
             const particles = new ParticleSet();
             const emitter = new Emitter(context, particles);
             const background = new Background(context);
+            const info = new Info(tokenId, particles);
+            const mouse = new Mouse(info, canvas);
             
             let last = performance.now();
 
             function draw(time:number) {
                 try {
 
-                    const seconds = 0.006960; // (time - last) / 1000;
+                    // const seconds = 0.006960; 
+                    const seconds = (time - last) / 1000;
                     last = time;
+
+                    info.countFrame(seconds);
 
                     background.update(seconds);
                     emitter.update(seconds);
@@ -666,6 +687,8 @@ try {
             }
 
             draw(last);
+
+            document.body.appendChild(canvas);
 
         } catch(e) {
             handleError(e);
