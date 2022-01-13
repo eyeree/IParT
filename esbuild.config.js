@@ -6,6 +6,7 @@ const buildOptions = {
     entryPoints: ["wap/src/frames.ts", "wap/src/index.ts"],
     outdir: "wap/dist",
     sourcemap: true,
+    bundle: true
     // incremental: mode == "dev",
 }
 

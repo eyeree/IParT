@@ -1,8 +1,9 @@
 {
     "compilerOptions": {
-        "outDir": "dist",
+        "outDir": "wap/dist",
         "strict": true,
-        "target": "ES6"
+        "target": "ES6",
+        "module": "CommonJS"       
     },
     "include": ["wap/**/*.ts"]
 }

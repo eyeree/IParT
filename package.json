@@ -1,4 +1,5 @@
 {
+  "type":"commonjs",
   "name": "ipart",
   "version": "1.0.0",
   "description": "Interactive Particle Token",
@@ -7,7 +8,8 @@
   },
   "scripts": {
     "build": "node esbuild.config.js build",
-    "serve": "node esbuild.config.js serve"
+    "serve": "node esbuild.config.js serve",
+    "check": "tsc"
   },
   "repository": {
     "type": "git",
@@ -26,5 +28,8 @@
   "bugs": {
     "url": "https://github.com/eyeree/IParT/issues"
   },
-  "homepage": "https://github.com/eyeree/IParT#readme"
+  "homepage": "https://github.com/eyeree/IParT#readme",
+  "dependencies": {
+    "typescript": "^4.5.4"
+  }
 }

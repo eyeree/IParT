@@ -40,8 +40,9 @@ window.onload = () => {
         for(let i = 0; i < f.length; ++i) {
             f[i].setAttribute('src', `index.html#${firstTokenId + i}`);
         }
+        document.location.hash = fromTokenId.toString();
     }
 
-    load(0);
+    load(document.location.hash ? Number.parseInt(document.location.hash.substring(1)) : 0);
 
 }
