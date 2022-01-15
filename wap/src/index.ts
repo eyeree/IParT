@@ -46,7 +46,7 @@ window.onload = () => {
 
         background.draw();
         swallower.draw();
-
+        
         gravity.frame(dt);
         friction.frame(dt);
         swallower.frame(dt);
@@ -55,9 +55,8 @@ window.onload = () => {
 
             gravity.update(p);
             friction.update(p);
-            mouse.update(p);
             swallower.update(p, dt);
-
+            mouse.update(p);
             position.update(p);           
             lifetime.update(p, dt);
 

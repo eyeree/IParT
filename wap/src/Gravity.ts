@@ -16,7 +16,7 @@ export class Gravity {
     private gravity:number = 0; 
 
     constructor(info:Info) {
-        info.addStat("gravity", GravityLevel[this._gravity].toString().toLowerCase());
+        info.addStat("gravity", GravityLevel[this._gravity]);
     }
 
     public frame(dt: number): void {

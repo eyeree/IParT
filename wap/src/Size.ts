@@ -2,6 +2,11 @@ import { Info } from "./Info";
 import { Particle } from "./Particle";
 import { rande } from "./Random";
 
+const MIN_SIZE = 1;
+const MAX_SIZE = 20 - MIN_SIZE;
+
+const MAX_SPEED = 200;
+
 enum SizeRadius {
     Small = 3,
     Medium = 10,
@@ -40,11 +45,6 @@ const SizeModeInit = {
     [SizeMode.Age_Grows]: SizeModeUpdate[SizeMode.Age_Grows],
     [SizeMode.Age_Shrinks]: SizeModeUpdate[SizeMode.Age_Shrinks],
 }
-
-const MIN_SIZE = 1;
-const MAX_SIZE = 20 - MIN_SIZE;
-
-const MAX_SPEED = 200;
 
 export class Size {
 
