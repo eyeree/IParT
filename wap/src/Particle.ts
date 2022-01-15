@@ -1,29 +1,24 @@
-import { Context, ContextBase } from './ContextBase';
-
-export const IMMORTAL = 0;
+import { Visualizer } from './Visualizer';
 
 let traceNext = false;
 
-export type ParticleConstructor = new (...args: any[]) => Particle;
-
-export class Particle extends ContextBase {
+export class Particle {
 
     public x: number = 0;
     public y: number = 0;
     public dx: number = 0;
     public dy: number = 0;
-    public radius: number = 1;
-    public health: number = 1;
-    public life: number = IMMORTAL;
-    public lived: number = 0;
+    public health: number = 0;
+    public life: number = 0;
+    public age: number = 0;
+    public style:string = "";
+    public radius:number = 0;
     public trace: boolean = false;
 
-    static update(dt:number) {
-        
-    }
+    get isOld() { return this.age > this.life; }
+    get isDead() { return this.health <= 0; }
 
-    public constructor(context: Context) {
-        super(context);
+    public constructor() {
         if (traceNext) {
             this.trace = true;
             traceNext = false;
@@ -31,36 +26,29 @@ export class Particle extends ContextBase {
         }
     }
 
-    public update(seconds: number) {
-
-        this.x += this.dx * seconds;
-        this.y += this.dy * seconds;
-
-        if (this.life != IMMORTAL) {
-            this.lived += seconds;
-            this.health = 1 - (this.lived / this.life);
-        }
-
-        if (this.trace) {
-            console.log(
-                "[Particle] Update - seconds: %f - dx: %f - x += %f - dy: %f - y += %f - x: %f - y:%f - life: %f - lived: %f - health: %f",
-                seconds, this.dx, this.dx * seconds, this.dy, this.dy * seconds, this.x, this.y, this.life, this.lived, this.health
-            );
-            this.context.beginPath();
-            this.context.strokeStyle = "white";
-            this.context.moveTo(this.x, this.y);
-            this.context.lineTo(this.x + this.dx, this.y + this.dy);
-            this.context.stroke();            
-        }
-
-    }
-
-    public draw() { }
-
-    public dead() {
+    public died() {
         if(this.trace) {
             traceNext = true;
         }
+    }
+
+    public kill() {
+        this.health = 0;
+    }
+
+    public forceFrom(x:number, y:number, strength:number):[number, number, number] {
+        const diffX = x - this.x;
+        const diffY = y - this.y;
+        const distance = Math.sqrt(diffX * diffX + diffY * diffY);
+        const force = (1 / distance) * strength;
+        const angle = Math.atan2(diffY, diffX);
+        const ddx = Math.cos(angle) * force;
+        const ddy = Math.sin(angle) * force;
+        return [ddx, ddy, distance];
+    }
+
+    get speed() { 
+        return Math.sqrt(this.dx*this.dx + this.dy*this.dy); 
     }
 
 }

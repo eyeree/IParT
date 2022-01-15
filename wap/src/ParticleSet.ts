@@ -11,26 +11,16 @@ export class ParticleSet {
         info.addStat("particles", () => this.particles.size);
     }
 
-    public get count() { return this.particles.size; }
-
-    update(seconds: number) {
-        for (const particle of this.particles) {
-            particle.update(seconds);
-            if (particle.health <= 0) {
-                this.remove(particle);
-                particle.dead();
-            } else {
-                particle.draw();
-            }
-        }
+    public get count() { 
+        return this.particles.size; 
     }
 
-    public get full() {
+    public get isFull() {
         return this.particles.size >= MAX_PARTICLES;
     }
 
     add(particle: Particle) {
-        if (!this.full) {
+        if (!this.isFull) {
             this.particles.add(particle);
         } else {
             console.warn("too many particles");
@@ -40,4 +30,9 @@ export class ParticleSet {
     remove(particle: Particle) {
         this.particles.delete(particle);
     }
+
+    forEach(f:(p:Particle) => void) {
+        this.particles.forEach(f);
+    }
+
 }

@@ -16,3 +16,14 @@ function mulberry32(a:number) {
     return ((t ^ t >>> 14) >>> 0) / 4294967296;
     }
 }
+
+export type NumericEnum = {[key:string|number]:string|number}
+
+export type EnumWeights<TEnum extends NumericEnum> = {[Property in keyof TEnum]?:number};
+
+export const rande = <TEnum extends NumericEnum>(e:TEnum, weights:EnumWeights<TEnum> = {}):TEnum[keyof TEnum] => randa(
+    Object
+       .values(e)
+       .filter(value => (typeof(value) == "number"))
+       .flatMap(value => new Array(weights[value] ?? 1).fill(value))
+);

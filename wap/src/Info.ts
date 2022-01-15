@@ -25,7 +25,7 @@ export class Info {
                 dd.innerText = value.toString();
                 break;
             case "string":
-                dd.innerText = value;
+                dd.innerText = value.toLowerCase().replace("_", " ");
                 break;
             case "function":
                 this.updateFunctions.add(

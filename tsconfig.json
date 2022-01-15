@@ -3,7 +3,8 @@
         "outDir": "wap/dist",
         "strict": true,
         "target": "ES6",
-        "module": "CommonJS"       
+        "module": "CommonJS",
+        "lib": ["DOM", "ES2019"]   
     },
     "include": ["wap/**/*.ts"]
 }

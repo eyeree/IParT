@@ -1,16 +1,15 @@
-import { Context, ContextBase } from './ContextBase';
 import { BACKGROUND_COLOR } from './Pallet';
 import { Info } from "./Info";
 
-export class Background extends ContextBase {
+export class Background {
 
-    constructor(private info: Info, context: Context) {
-        super(context);
+    constructor(info: Info, private context: CanvasRenderingContext2D) {
         info.addStat("background", BACKGROUND_COLOR);
     }
 
-    public update(seconds: number) {
+    public draw() {
         this.context.fillStyle = BACKGROUND_COLOR;
-        this.context.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
+        this.context.fillRect(0, 0, this.context.canvas.width, this.context.canvas.height);
     }
+    
 }

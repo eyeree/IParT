@@ -1,26 +1,33 @@
-import { randf } from './Random';
-import { MIN_GRAVITY, MAX_GRAVITY } from './Configuration';
-import { ParticleConstructor } from './Particle';
+import { rande } from './Random';
+import { Particle } from './Particle';
 import { Info } from "./Info";
 
-export function Gravity<TBase extends ParticleConstructor>(info: Info, Base: TBase) {
+export enum GravityLevel {
+    None =    0,
+    Low =    30,
+    Medium = 40,
+    High =   50
+}
 
-    class Gravity extends Base {
+export class Gravity {
 
-        static readonly gravity: number = randf(MIN_GRAVITY, MAX_GRAVITY);
+    public readonly _gravity: number = rande(GravityLevel);
 
-        update(seconds: number) {
-            this.dy += Gravity.gravity * seconds;
-            if (this.trace) {
-                console.log("[Gravity] dy: %f - dy += %f", this.dy, Gravity.gravity * seconds);
-            }
-            super.update(seconds);
-        }
+    private gravity:number = 0; 
 
+    constructor(info:Info) {
+        info.addStat("gravity", GravityLevel[this._gravity].toString().toLowerCase());
     }
 
-    info.addStat("gravity", Gravity.gravity.toFixed(2));
+    public frame(dt: number): void {
+        this.gravity = this._gravity * dt;
+    }
 
-    return Gravity;
+    public update(p: Particle): void {
+        p.dy += this.gravity;
+        if (p.trace) {
+            console.log("[Gravity] dx: %f - dy: %f - gravity: %f", p.dx, p.dy, this.gravity);
+        }
+    }
 
 }
