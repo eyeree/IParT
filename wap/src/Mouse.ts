@@ -1,11 +1,13 @@
 import { Info } from './Info';
 import { Frame } from './Frame';
 import { rande } from './Random';
-import { Particle } from './Particle';
+import { Particle, Trace } from './Particle';
+import { Swallower } from './Swallower';
+import { ParticleSet } from './ParticleSet';
 
 export enum MouseMode {
+    Push,
     Pull,
-    Push
 };
 
 export enum MouseStrength {
@@ -24,15 +26,18 @@ export class Mouse {
     public pointer_x = 0;
     public pointer_y = 0;
     public over = false;
-    public down = false;
+    public interacting = false;
+    private old_x = 0;
+    private old_y = 0;
 
     readonly mode:MouseMode = rande(MouseMode);
     readonly strength:MouseStrength = rande(MouseStrength);
     frame_strength = 0;
+    draggingSwallower: boolean = false;
 
-    constructor(private info: Info, private context: CanvasRenderingContext2D, private _frame:Frame) {
+    constructor(private info: Info, private context: CanvasRenderingContext2D, private _frame:Frame, private swallower:Swallower, private particles:ParticleSet) {
 
-        info.addStat("mouse", `${MouseStrength[this.strength].toLocaleLowerCase()}-${MouseMode[this.mode].toLowerCase()})`);
+        info.addStat("mouse", `${MouseStrength[this.strength].toLocaleLowerCase()}-${MouseMode[this.mode].toLowerCase()}`);
 
         window.onpointerenter = event => {
             this.over = true;
@@ -43,40 +48,76 @@ export class Mouse {
         };
 
         window.onpointermove = event => {
-            if (this.down) {
-                this.pointer_x = event.x;
-                this.pointer_y = event.y;
-                console.log("onpointermove", this.pointer_x, this.pointer_y);
+            if (this.interacting) {
+                console.log("interacting", this.pointer_x, this.pointer_y);
+            } else if(this.draggingSwallower) {
+                const dx = event.x - this.pointer_x;
+                const dy = event.y - this.pointer_y;
+                swallower.x += dx;
+                swallower.y += dy;
+                particles.forEach(p => {
+                    if(p.swallowed) {
+                        p.x += dx;
+                        p.y += dy;
+                    }
+                })
+                console.log("dragging", this.pointer_x, this.pointer_y, this.swallower.x, this.swallower.y);
             }
+            this.pointer_x = event.x;
+            this.pointer_y = event.y;
         };
 
         window.onpointerdown = event => {
             
             if(event.target != this.context.canvas) return;
 
-            if (this.info.isVisible) {
-                console.log("onpointerdown", "info visible");
-                this.info.hideInfo();
-            } else {
+            console.log("onpointerdown", event.buttons, event.button);
+            
+            if(event.buttons == 1 && event.button == 0) { // left click, touch, pen
 
-                if(event.altKey && event.ctrlKey) {
-                    this._frame.debugMode = !this._frame.debugMode;
-                } else if(this._frame.debugMode && event.altKey) {
-                    this._frame.nextDebugFrame();
+                if (this.info.isVisible) {
+                    this.info.hideInfo();
                 } else {
-                    this.down = true;
+    
+                    if(this.isOnSwallower(event)) {
+                        this.draggingSwallower = true;
+                    } else {
+                        this.interacting = true;
+                    }
+
                     this.pointer_x = event.x;
                     this.pointer_y = event.y;
+
                     document.body.setPointerCapture(event.pointerId);
-                    console.log("onpointerdown", this.pointer_x, this.pointer_y);
+
                 }
+                
+            } else if(event.buttons == 2 && event.button == 2) { // right click, pen barrel button
+
+                if(DEBUG) {
+                    if(event.shiftKey && event.ctrlKey) {
+                        Trace.autoTraceNext = !Trace.autoTraceNext;
+                        Trace.traceNext = Trace.autoTraceNext;
+                    } else if(event.ctrlKey) {
+                        Trace.restartTrace();
+                    } else if(event.altKey) {
+                        window.open(document.location.toString(), "_top");
+                    }
+                }
+
             }
-            
+
         };
 
+        window.oncontextmenu = event => {
+            console.log("oncontextmenu");
+            event.preventDefault();
+        }
+
         window.onpointerup = event => {
-            if (this.down) {
-                this.down = false;
+            if (this.interacting || this.draggingSwallower) {
+                this.interacting = false;
+                this.draggingSwallower = false;
                 this.pointer_x = event.x;
                 this.pointer_y = event.y;
                 document.body.releasePointerCapture(event.pointerId);
@@ -111,14 +152,21 @@ export class Mouse {
 
     }
 
+    isOnSwallower(event: PointerEvent) {
+        const diffX = this.swallower.x - event.x;
+        const diffY = this.swallower.y - event.y;
+        const distance = Math.sqrt(diffX * diffX + diffY * diffY);
+        return distance <= this.swallower.radius;
+    }
+
     frame(dt: number) {
-        if(!this.down) return;
+        if(!this.interacting) return;
         this.frame_strength = this.strength * dt;
     }
 
     update(p:Particle) {
         
-        if(!this.down) return;
+        if(!this.interacting || p.swallowed) return;
 
         const [ddx, ddy, distance] = p.forceFrom(this.pointer_x, this.pointer_y, this.frame_strength);
 
@@ -143,8 +191,8 @@ export class Mouse {
                 throw new Error(`unhandled mouse mode: ${MouseMode[this.mode]}`);
         }
 
-        if (p.trace) {
-            console.log("[MouseMove] dx: %.4f - dy: %.4f - ddx: %.4f - ddy: %.4f - distance: %.2f", p.dx, p.dy, ddx, ddy, distance);
+        if (DEBUG && p.trace) {
+            console.log("[MouseMove] dx: %.4f - dy: %.4f - ddx: %.4f - ddy: %.4f - distance: %.2f - frame_strength: %.2f - strength: %.2f", p.dx, p.dy, ddx, ddy, distance, this.frame_strength, this.strength);
             this.context.beginPath();
             this.context.strokeStyle = "yellow";
             this.context.moveTo(p.x, p.y);
@@ -155,4 +203,3 @@ export class Mouse {
     }
 
 }
-

@@ -1,7 +1,7 @@
 import { Particle } from './Particle';
 import { Info } from "./Info";
 
-export const MAX_PARTICLES = 4000;
+export const MAX_PARTICLES =  4000;
 
 export class ParticleSet {
 

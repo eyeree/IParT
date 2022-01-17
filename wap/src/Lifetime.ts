@@ -57,7 +57,7 @@ export class Lifetime {
         
         p.age += dt;
 
-        if(p.isOld) {
+        if(p.isOld && !p.swallowed) {
             p.health -= this.frame_oldDecline;
         }
 
@@ -65,16 +65,14 @@ export class Lifetime {
             p.health -= this.frame_stoppedDecline;            
         }
 
-        if(p.health <= 0) {
-            p.health = 0;
-            p.died();
-        }
-
-        if(p.trace) {
+        if(DEBUG && p.trace) {
             console.log(
                 "[Lifetime] age: %.2f - life: %.2f - isDying: %s - health: %.4f - isDead: %s - longevity: %d - decline: %.4f - frame_decline: %.4f", 
                 p.age, p.life, p.isOld, p.health, p.isDead, this.longevity, this.oldDecline, this.frame_oldDecline
             );
+            if(p.health <= 0) {
+                p.died();
+            }    
         }
 
     }

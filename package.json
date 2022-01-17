@@ -1,5 +1,4 @@
 {
-  "type":"commonjs",
   "name": "ipart",
   "version": "1.0.0",
   "description": "Interactive Particle Token",
@@ -9,6 +8,7 @@
   "scripts": {
     "build": "node esbuild.config.js build",
     "serve": "node esbuild.config.js serve",
+    "watch": "node esbuild.config.js watch",
     "check": "tsc"
   },
   "repository": {

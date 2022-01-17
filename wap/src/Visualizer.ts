@@ -16,7 +16,7 @@ export class Visualizer {
 
     init(p:Particle) {
         p.style = this.options?.style ?? randa(PALLET, 1);
-        p.radius = this.options?.radius ?? randf(3, 6);
+        this.draw(p);
     }
 
     draw(p:Particle) {
@@ -26,7 +26,7 @@ export class Visualizer {
         this.context.closePath();
         this.context.fill();
 
-        if (p.trace) {
+        if (DEBUG && p.trace) {
             this.context.beginPath();
             this.context.strokeStyle = "hotpink";
             this.context.moveTo(0, p.y);
@@ -34,6 +34,7 @@ export class Visualizer {
             this.context.moveTo(p.x, 0);
             this.context.lineTo(p.x, this.context.canvas.height);
             this.context.stroke();
+            console.log("[Visualizer] x: %.4f - y: %.4f - radius: %.4f - style: %s", p.x, p.y, p.radius, p.style);
         }
     }
 

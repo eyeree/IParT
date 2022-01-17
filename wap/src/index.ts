@@ -1,3 +1,5 @@
+declare global { const DEBUG:boolean; }
+
 import './ErrorHandler';
 
 import { tokenId } from './TokenId';
@@ -9,8 +11,6 @@ import { Mouse } from './Mouse';
 import { Frame } from './Frame';
 import { Resize } from './Resize';
 import { Swallower } from './Swallower';
-import { Gravity } from './Gravity';
-import { Friction } from './Friction';
 import { Position } from './Position';
 import { Visualizer } from './Visualizer';
 import { Lifetime } from './Lifetime';
@@ -28,13 +28,11 @@ window.onload = () => {
     const info = new Info(tokenId);
     const resize = new Resize(info, canvas);
     const frame = new Frame(info);
-    const mouse = new Mouse(info, context, frame);
+    const swallower = new Swallower(info, context);
     const particles = new ParticleSet(info);
+    const mouse = new Mouse(info, context, frame, swallower, particles);
     const visualizer = new Visualizer(info, context);
     const emitter = new Emitter(info, canvas);
-    const gravity = new Gravity(info);
-    const friction = new Friction(info);
-    const swallower = new Swallower(info, context);
     const background = new Background(info, context);
     const position = new Position(info, canvas);
     const lifetime = new Lifetime(info);
@@ -46,19 +44,20 @@ window.onload = () => {
 
         background.draw();
         swallower.draw();
-        
-        gravity.frame(dt);
-        friction.frame(dt);
+
+        position.frame(dt);
         swallower.frame(dt);
+        lifetime.frame(dt);
+        mouse.frame(dt);
 
         particles.forEach(p => {
 
-            gravity.update(p);
-            friction.update(p);
             swallower.update(p, dt);
             mouse.update(p);
-            position.update(p);           
             lifetime.update(p, dt);
+            size.update(p, dt);
+            emitter.update(p);
+            position.update(p, dt);       
 
             if(p.isDead) {
                 particles.remove(p);
@@ -68,12 +67,12 @@ window.onload = () => {
 
         });
 
-        if(emitter.emit(dt)) {
+        if(!particles.isFull && emitter.emit(dt)) {
             const p = new Particle();
             emitter.init_speed(p);
+            lifetime.init(p);
             size.init(p);
             emitter.init_position(p);
-            lifetime.init(p);
             visualizer.init(p);
             particles.add(p);
         }

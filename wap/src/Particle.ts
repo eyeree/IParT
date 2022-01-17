@@ -1,8 +1,49 @@
-import { Visualizer } from './Visualizer';
 
-let traceNext = false;
+export class Trace {
+    
+    public constructor() {
+        if (DEBUG && Trace.traceNext) {
+            Trace.traceNext = false;
+            Trace.traced = this;
+            this.trace = true;
+            console.log("[Particle] Created Particle");
+        }
+    }
 
-export class Particle {
+    public static restartTrace() {
+        if(Trace.traced) {
+            Trace.traced.trace = false;
+            Trace.traced = null;
+        }
+        Trace.traceNext = true;
+        console.clear();
+    }
+
+    public static autoTraceNext = false;
+    public static traceNext = false;
+    protected static traced:Trace|null = null;    
+    public trace: boolean = false;
+
+    public died() {
+        if(this.trace) {
+            Trace.traced = null;
+            Trace.traceNext = Trace.autoTraceNext;
+            console.log("[Particle] Particle Died - traceNext: %s - autoTraceNext: %s", Trace.traceNext, Trace.autoTraceNext);
+        }
+    }
+
+}
+
+class NoTrace {
+    public readonly trace = false;
+    public died() {}
+}
+
+function Base():typeof Trace| typeof NoTrace {
+    return DEBUG ? Trace : NoTrace;
+}
+
+export class Particle extends Trace {
 
     public x: number = 0;
     public y: number = 0;
@@ -13,27 +54,15 @@ export class Particle {
     public age: number = 0;
     public style:string = "";
     public radius:number = 0;
-    public trace: boolean = false;
+    public edgeDetect:boolean = true;
+    public swallowed:boolean = false;
 
     get isOld() { return this.age > this.life; }
     get isDead() { return this.health <= 0; }
 
-    public constructor() {
-        if (traceNext) {
-            this.trace = true;
-            traceNext = false;
-            console.log("[Particle] Created Particle");
-        }
-    }
-
-    public died() {
-        if(this.trace) {
-            traceNext = true;
-        }
-    }
-
     public kill() {
         this.health = 0;
+        this.died();
     }
 
     public forceFrom(x:number, y:number, strength:number):[number, number, number] {
