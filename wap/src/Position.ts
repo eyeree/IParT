@@ -69,9 +69,6 @@ export class Position {
                 p.dy += this.frame_gravity * factor;
             }
 
-            p.x += p.dx * dt;
-            p.y += p.dy * dt;
-        
         } else {
 
             if(!p.swallowed) {
@@ -81,11 +78,11 @@ export class Position {
                 p.dy += this.frame_gravity;
             }
 
-            p.x += p.dx * dt;
-            p.y += p.dy * dt;
-    
         }
 
+        p.x += p.dx * dt;
+        p.y += p.dy * dt;
+    
         if (DEBUG && p.trace) {
             console.log("[Position] x: %.2f - y: %.2f - dx: %.4f - dy: %.4f - frame_friction: %.4f - friction: %.4f - frame_gravity: %.4f - gravity: %.4f - swallowed %s", p.x, p.y, p.dx, p.dy, this.frame_friction, this.friction, this.frame_gravity, this.gravity, p.swallowed);
         }

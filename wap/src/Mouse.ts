@@ -23,29 +23,21 @@ export class Mouse {
     private readonly show_info = document.getElementById("show_info")! as HTMLDivElement;
     private readonly full_screen = document.getElementById("full_screen")! as HTMLDivElement;
 
-    public pointer_x = 0;
-    public pointer_y = 0;
-    public over = false;
-    public interacting = false;
-    private old_x = 0;
-    private old_y = 0;
+    private pointer_x = 0;
+    private pointer_y = 0;
 
-    readonly mode:MouseMode = rande(MouseMode);
-    readonly strength:MouseStrength = rande(MouseStrength);
-    frame_strength = 0;
-    draggingSwallower: boolean = false;
+    private readonly mode:MouseMode = rande(MouseMode);
+    private readonly strength:MouseStrength = rande(MouseStrength);
+    private frame_strength:number = 0;
+    private interacting = false;
+
+    private draggingSwallower: boolean = false;
+
+    public restart:boolean = false;
 
     constructor(private info: Info, private context: CanvasRenderingContext2D, private _frame:Frame, private swallower:Swallower, private particles:ParticleSet) {
 
         info.addStat("mouse", `${MouseStrength[this.strength].toLocaleLowerCase()}-${MouseMode[this.mode].toLowerCase()}`);
-
-        window.onpointerenter = event => {
-            this.over = true;
-        };
-
-        window.onpointerleave = event => {
-            this.over = false;
-        };
 
         window.onpointermove = event => {
             if (this.interacting) {
@@ -98,6 +90,8 @@ export class Mouse {
                     if(event.shiftKey && event.ctrlKey) {
                         Trace.autoTraceNext = !Trace.autoTraceNext;
                         Trace.traceNext = Trace.autoTraceNext;
+                    } else if(event.ctrlKey && event.altKey) {
+                        this.restart = true;
                     } else if(event.ctrlKey) {
                         Trace.restartTrace();
                     } else if(event.altKey) {

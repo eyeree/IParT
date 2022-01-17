@@ -2,8 +2,9 @@ import { Info } from "./Info";
 import { Particle } from "./Particle";
 import { rande } from "./Random";
 
-const MIN_SIZE = 3;
-const MAX_SIZE = 10;
+export const MIN_RADIUS = 3;
+export const MAX_RADIUS = 10;
+export const RADIUS_RANGE = MAX_RADIUS - MIN_RADIUS;
 
 const MAX_SPEED = 200;
 
@@ -30,10 +31,10 @@ const SizeModeInit = {
     [SizeMode.Fixed_Medium]: (p:Particle) => SizeRadius.Medium,
     [SizeMode.Fixed_Large]: (p:Particle) => SizeRadius.Large,
     // [SizeMode.Fixed_Random]: (p:Particle) => rande(SizeRadius),
-    [SizeMode.Speed_Grows]: (p:Particle) => MIN_SIZE + (Math.min(MAX_SPEED, p.speed) / MAX_SPEED) * MAX_SIZE,
-    [SizeMode.Speed_Shrinks]: (p:Particle) => MIN_SIZE + (MAX_SIZE - ((Math.min(MAX_SPEED, p.speed) / MAX_SPEED) * MAX_SIZE)),
-    [SizeMode.Age_Grows]: (p:Particle) => p.age > p.life ? MAX_SIZE : MIN_SIZE + ((p.age / p.life) * MAX_SIZE),
-    [SizeMode.Age_Shrinks]: (p:Particle) => p.age > p.life ? MIN_SIZE : MIN_SIZE + (MAX_SIZE - ((p.age / p.life) * MAX_SIZE))
+    [SizeMode.Speed_Grows]: (p:Particle) => MIN_RADIUS + (Math.min(MAX_SPEED, p.speed) / MAX_SPEED) * RADIUS_RANGE,
+    [SizeMode.Speed_Shrinks]: (p:Particle) => MIN_RADIUS + (RADIUS_RANGE - ((Math.min(MAX_SPEED, p.speed) / MAX_SPEED) * RADIUS_RANGE)),
+    [SizeMode.Age_Grows]: (p:Particle) => p.age > p.life ? MAX_RADIUS : MIN_RADIUS + ((p.age / p.life) * RADIUS_RANGE),
+    [SizeMode.Age_Shrinks]: (p:Particle) => p.age > p.life ? MIN_RADIUS : MIN_RADIUS + (RADIUS_RANGE - ((p.age / p.life) * RADIUS_RANGE))
 };
 
 const SizeModeUpdate = { 
@@ -60,6 +61,7 @@ export class Size {
 
     init(p:Particle) {
         p.radius = this._init(p);
+        // p.radius = Math.floor(this._init(p));
         if(p.trace) {
             console.log("[Size] %s init radius: %.4f", SizeMode[this.mode], p.radius);
         }
@@ -68,6 +70,7 @@ export class Size {
     update(p:Particle, dt:number) {
         const update = this._update(p);
         p.radius = update * p.health;
+        // p.radius = Math.floor(update * p.health);
         if(p.trace) {
             console.log("[Size] %s radius: %.4f - update: %.4f - health: %.4f", SizeMode[this.mode], p.radius, update, p.health);
         }

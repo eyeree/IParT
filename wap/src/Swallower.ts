@@ -87,12 +87,4 @@ export class Swallower {
 
     }
 
-    draw() {
-        this.context.beginPath();
-        this.context.fillStyle = "blue";
-        this.context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        this.context.closePath();
-        this.context.fill();
-    }
-
 }

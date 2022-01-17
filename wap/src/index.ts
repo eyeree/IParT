@@ -5,7 +5,6 @@ import './ErrorHandler';
 import { tokenId } from './TokenId';
 import { ParticleSet } from './ParticleSet';
 import { Emitter } from './Emitter';
-import { Background } from './Background';
 import { Info } from './Info';
 import { Mouse } from './Mouse';
 import { Frame } from './Frame';
@@ -16,13 +15,21 @@ import { Visualizer } from './Visualizer';
 import { Lifetime } from './Lifetime';
 import { Particle } from './Particle';
 import { Size } from './Size';
+import { seed } from './Random';
 
 window.onhashchange = () => window.location.reload();
 
 window.onload = () => {
-
     const canvas = document.createElement("canvas");
-    const context = canvas.getContext("2d")!;
+    document.body.appendChild(canvas);
+    run(canvas);
+}
+
+function run(canvas:HTMLCanvasElement) {
+
+    seed(tokenId);
+
+    const context = canvas.getContext("2d");
     if (context == null) throw new Error("canvas 2d context is not supported");
 
     const info = new Info(tokenId);
@@ -31,9 +38,8 @@ window.onload = () => {
     const swallower = new Swallower(info, context);
     const particles = new ParticleSet(info);
     const mouse = new Mouse(info, context, frame, swallower, particles);
-    const visualizer = new Visualizer(info, context);
+    const visualizer = new Visualizer(info, context, swallower);
     const emitter = new Emitter(info, canvas);
-    const background = new Background(info, context);
     const position = new Position(info, canvas);
     const lifetime = new Lifetime(info);
     const size = new Size(info);
@@ -42,8 +48,7 @@ window.onload = () => {
 
         const dt = frame.getDT(time);
 
-        background.draw();
-        swallower.draw();
+        visualizer.drawBackground();
 
         position.frame(dt);
         swallower.frame(dt);
@@ -62,7 +67,7 @@ window.onload = () => {
             if(p.isDead) {
                 particles.remove(p);
             } else {
-                visualizer.draw(p);
+                visualizer.drawParticle(p);
             }
 
         });
@@ -77,12 +82,14 @@ window.onload = () => {
             particles.add(p);
         }
 
-        window.requestAnimationFrame(update);
+        if(mouse.restart) {
+            run(canvas);
+        } else {
+            window.requestAnimationFrame(update);
+        }
 
     }
 
     update(frame.last);
-
-    document.body.appendChild(canvas);
 
 }

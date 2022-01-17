@@ -30,6 +30,8 @@
   },
   "homepage": "https://github.com/eyeree/IParT#readme",
   "dependencies": {
+    "@types/chroma-js": "^2.1.3",
+    "chroma-js": "^2.1.2",
     "typescript": "^4.5.4"
   }
 }
