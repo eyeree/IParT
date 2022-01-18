@@ -8,25 +8,25 @@ enum EdgeMode {
     Bounce
 }
 
-enum FrictionLevel {
+export enum FrictionLevel {
     None =   0.00,
     Low =    0.25,
     Medium = 0.50,
     High =   1.00
 }
 
-enum GravityLevel {
+export enum GravityLevel {
     None =    0,
-    Low =    100,
-    Medium = 300,
-    High =   600
+    Low =    50,
+    Medium = 150,
+    High =   300
 }
 
-const MATURE_AGE = 5;
+const MATURE_AGE = 0.0;
 
 export class Position {
 
-    private readonly friction = rande(FrictionLevel);
+    public readonly friction = rande(FrictionLevel);
     private frame_friction = 0;
 
     public readonly gravity: number = rande(GravityLevel);

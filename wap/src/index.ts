@@ -35,12 +35,12 @@ function run(canvas:HTMLCanvasElement) {
     const info = new Info(tokenId);
     const resize = new Resize(info, canvas);
     const frame = new Frame(info);
-    const swallower = new Swallower(info, context);
     const particles = new ParticleSet(info);
+    const swallower = new Swallower(info, context);
     const mouse = new Mouse(info, context, frame, swallower, particles);
     const visualizer = new Visualizer(info, context, swallower);
-    const emitter = new Emitter(info, canvas);
     const position = new Position(info, canvas);
+    const emitter = new Emitter(info, canvas, position);
     const lifetime = new Lifetime(info);
     const size = new Size(info);
     

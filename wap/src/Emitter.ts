@@ -1,5 +1,6 @@
 import { Info } from './Info';
 import { Particle } from './Particle';
+import { GravityLevel, Position } from './Position';
 import { rande, randf, randfs } from './Random';
 
 enum Location {
@@ -34,7 +35,7 @@ const Divergence = {
     [Size.Point]: 0,
     [Size.Small]: 15,
     [Size.Medium]: 10,
-    [Size.Large]: 5
+    [Size.Large]: 2
 }
 
 const EDGE_MARGIN = 0.05;
@@ -45,8 +46,6 @@ const MAX_VOLUME_VARIATION =  0.2;
 
 const MIN_SPEED_VARIATION = -0.2;
 const MAX_SPEED_VARIATION =  0.2;
-
-const PRENATAL_TIME = -5;
 
 export class Emitter {
 
@@ -62,7 +61,7 @@ export class Emitter {
 
     private next: number = 0;
 
-    constructor(info:Info, private canvas:HTMLCanvasElement) {
+    constructor(info:Info, private canvas:HTMLCanvasElement, private position:Position) {
         if(this.location == Location.Interior) {
             this.min_x = randf(CENTER_MARGIN, 1 - CENTER_MARGIN);
             this.min_y = randf(CENTER_MARGIN, 1 - CENTER_MARGIN);
@@ -99,10 +98,10 @@ export class Emitter {
                     throw new Error(`unhandled location: ${Location[this.location]}`);
             }
         }
-        info.addStat("emitter-location", Location[this.location]);
-        info.addStat("emitter-size", Size[this.size]);
-        info.addStat("emitter-volume", Volume[this.volume]);
-        info.addStat("emitter-velocity", Velocity[this.speed]);
+        info.addStat("emitter location", Location[this.location]);
+        info.addStat("emitter size", Size[this.size]);
+        info.addStat("emitter volume", Volume[this.volume]);
+        info.addStat("emitter velocity", Velocity[this.speed]);
     }
 
     private getEdgeRange():[number, number] {
@@ -196,7 +195,7 @@ export class Emitter {
         } else {
 
             const speed = this.speed + (this.speed * randf(MIN_SPEED_VARIATION, MAX_SPEED_VARIATION));
-            const divergence = randf(0, this.divergence)
+            const divergence = randfs(0, this.divergence)
     
             let ddy:number;
             let ddx:number;
@@ -204,19 +203,19 @@ export class Emitter {
             switch(this.location) {
                 case Location.Top:
                     ddx = divergence;
-                    ddy = speed;
+                    ddy = speed - this.position.gravity;
                     break;
                 case Location.Bottom:
                     ddx = divergence;
-                    ddy = -speed;
+                    ddy = -(speed + this.position.gravity);
                     break;
                 case Location.Left:
                     ddx = speed;
-                    ddy = divergence;
+                    ddy = divergence - this.position.gravity / 2;
                     break;
                 case Location.Right:
                     ddx = -speed;
-                    ddy = divergence;
+                    ddy = divergence - this.position.gravity / 2;
                     break;
             }
 

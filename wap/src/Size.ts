@@ -2,19 +2,19 @@ import { Info } from "./Info";
 import { Particle } from "./Particle";
 import { rande } from "./Random";
 
-export const MIN_RADIUS = 3;
-export const MAX_RADIUS = 10;
+export const MIN_RADIUS = 5;
+export const MAX_RADIUS = 20;
 export const RADIUS_RANGE = MAX_RADIUS - MIN_RADIUS;
 
-const MAX_SPEED = 200;
+export const MAX_SPEED = 50;
 
 enum SizeRadius {
-    Small = 3,
-    Medium = 5,
-    Large = 10,
+    Small = 5,
+    Medium = 10,
+    Large = 15,
 }
 
-enum SizeMode {    
+export enum SizeMode {    
     Fixed_Small,
     Fixed_Medium,
     Fixed_Large,
@@ -51,9 +51,9 @@ const SizeModeUpdate = {
 
 export class Size {
 
-    readonly mode = rande(SizeMode);
-    readonly _init = SizeModeInit[this.mode];
-    readonly _update = SizeModeInit[this.mode];
+    public readonly mode = rande(SizeMode);
+    private readonly _init = SizeModeInit[this.mode];
+    private readonly _update = SizeModeInit[this.mode];
 
     constructor(info:Info) {
         info.addStat("size", SizeMode[this.mode]);

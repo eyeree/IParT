@@ -26,7 +26,7 @@ export class Mouse {
     private pointer_x = 0;
     private pointer_y = 0;
 
-    private readonly mode:MouseMode = rande(MouseMode);
+    private readonly mode:MouseMode = rande(MouseMode, {[MouseMode.Pull]:0});
     private readonly strength:MouseStrength = rande(MouseStrength);
     private frame_strength:number = 0;
     private interacting = false;
@@ -37,9 +37,11 @@ export class Mouse {
 
     constructor(private info: Info, private context: CanvasRenderingContext2D, private _frame:Frame, private swallower:Swallower, private particles:ParticleSet) {
 
-        info.addStat("mouse", `${MouseStrength[this.strength].toLocaleLowerCase()}-${MouseMode[this.mode].toLowerCase()}`);
+        info.addStat("mouse strength", `${MouseStrength[this.strength].toLocaleLowerCase()}`);
 
-        window.onpointermove = event => {
+        const canvas = this.context.canvas;
+
+        canvas.onpointermove = event => {
             if (this.interacting) {
                 console.log("interacting", this.pointer_x, this.pointer_y);
             } else if(this.draggingSwallower) {
@@ -59,11 +61,9 @@ export class Mouse {
             this.pointer_y = event.y;
         };
 
-        window.onpointerdown = event => {
+        canvas.onpointerdown = event => {
             
-            if(event.target != this.context.canvas) return;
-
-            console.log("onpointerdown", event.buttons, event.button);
+            console.log("canvas onpointerdown", event.buttons, event.button, event.metaKey?"meta":"", event.altKey?"alt":"", event.ctrlKey?"ctrl":"", event.shiftKey?"shift":"");
             
             if(event.buttons == 1 && event.button == 0) { // left click, touch, pen
 
@@ -80,44 +80,53 @@ export class Mouse {
                     this.pointer_x = event.x;
                     this.pointer_y = event.y;
 
-                    document.body.setPointerCapture(event.pointerId);
+                    canvas.setPointerCapture(event.pointerId);
 
                 }
-                
-            } else if(event.buttons == 2 && event.button == 2) { // right click, pen barrel button
 
-                if(DEBUG) {
-                    if(event.shiftKey && event.ctrlKey) {
-                        Trace.autoTraceNext = !Trace.autoTraceNext;
-                        Trace.traceNext = Trace.autoTraceNext;
-                    } else if(event.ctrlKey && event.altKey) {
-                        this.restart = true;
-                    } else if(event.ctrlKey) {
-                        Trace.restartTrace();
-                    } else if(event.altKey) {
-                        window.open(document.location.toString(), "_top");
-                    }
+            } else if(DEBUG && event.buttons == 4 && event.button == 1) { // scroll wheel
+
+                if(event.ctrlKey) {
+                    document.location.reload();
+                } else if(event.altKey) {
+                    window.open(document.location.toString(), "_top");
                 }
 
+            } else if(DEBUG && event.buttons == 2 && event.button == 2) { // right click, pen barrel button
+
+                if(event.ctrlKey) {
+                    Trace.toggleTrace();
+                } else if(event.altKey) {
+                    Trace.stopTrace();
+                } else {
+                    Trace.traceOne();
+                }
+    
             }
+
+            event.preventDefault();
+            event.stopPropagation();
+            return false;
 
         };
 
-        window.oncontextmenu = event => {
-            console.log("oncontextmenu");
-            event.preventDefault();
-        }
-
-        window.onpointerup = event => {
+        canvas.onpointerup = event => {
+            console.log("canvas onpointerup", this.pointer_x, this.pointer_y);
             if (this.interacting || this.draggingSwallower) {
                 this.interacting = false;
                 this.draggingSwallower = false;
                 this.pointer_x = event.x;
                 this.pointer_y = event.y;
-                document.body.releasePointerCapture(event.pointerId);
-                console.log("onpointerup", this.pointer_x, this.pointer_y);
+                canvas.releasePointerCapture(event.pointerId);
             }
         };
+
+        canvas.oncontextmenu = event => {
+            console.log("canvas oncontextmenu");
+            event.preventDefault();
+            event.stopPropagation();
+            return false;
+        }
 
         this.show_info.onclick = () => {
             console.log("show_info.onclick", info.isVisible);

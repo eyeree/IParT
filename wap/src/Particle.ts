@@ -10,7 +10,7 @@ export class Trace {
         }
     }
 
-    public static restartTrace() {
+    public static traceOne() {
         if(Trace.traced) {
             Trace.traced.trace = false;
             Trace.traced = null;
@@ -19,9 +19,39 @@ export class Trace {
         console.clear();
     }
 
-    public static autoTraceNext = false;
-    public static traceNext = false;
-    protected static traced:Trace|null = null;    
+    public static toggleTrace() {
+        if(Trace.autoTraceNext) {
+            Trace.stopTrace();
+        } else {
+            Trace.startTrace();
+        }
+    }
+
+    public static startTrace() {
+        Trace.autoTraceNext = true;
+        Trace.traceNext = true;
+        if(Trace.traced) {
+            Trace.traced.trace = false;
+            Trace.traced = null;
+        }
+    }
+
+    public static stopTrace() {
+        Trace.traceNext = false;
+        Trace.autoTraceNext = false;
+        if(Trace.traced) {
+            Trace.traced.trace = false;
+            Trace.traced = null;
+        }
+    }
+
+    public static get isTracing() {
+        return Trace.traced?.trace ?? false;
+    }
+
+    private static autoTraceNext = false;
+    private static traceNext = false;
+    private static traced:Trace|null = null;    
     public trace: boolean = false;
 
     public died() {
