@@ -4,7 +4,7 @@ import { randf, rande } from './Random';
 import { easeInQuad } from './Easing';
 
 export enum Strength {
-     None =       0,
+    None =       0,
     Small =   6000,
     Medium = 12000,
     Large =  24000,

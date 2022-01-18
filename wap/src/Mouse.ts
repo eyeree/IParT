@@ -18,6 +18,8 @@ export enum MouseStrength {
 
 const MOUSE_RADIUS = 20;
 
+const SWALLOWER_MARGIN = 50;
+
 export class Mouse {
 
     private readonly show_info = document.getElementById("show_info")! as HTMLDivElement;
@@ -43,12 +45,16 @@ export class Mouse {
 
         canvas.onpointermove = event => {
             if (this.interacting) {
-                console.log("interacting", this.pointer_x, this.pointer_y);
+                //console.log("interacting", this.pointer_x, this.pointer_y);
             } else if(this.draggingSwallower) {
-                const dx = event.x - this.pointer_x;
-                const dy = event.y - this.pointer_y;
-                swallower.x += dx;
-                swallower.y += dy;
+                let dx = event.x - this.pointer_x;
+                let dy = event.y - this.pointer_y;
+                const x = swallower.x;
+                const y = swallower.y;
+                swallower.x = Math.max(SWALLOWER_MARGIN, Math.min(context.canvas.width - SWALLOWER_MARGIN, swallower.x + dx));
+                swallower.y = Math.max(SWALLOWER_MARGIN, Math.min(context.canvas.height - SWALLOWER_MARGIN, swallower.y + dy));
+                dx = swallower.x - x;
+                dy = swallower.y - y;
                 particles.forEach(p => {
                     if(p.swallowed) {
                         p.x += dx;
