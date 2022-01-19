@@ -11,9 +11,9 @@ export enum MouseMode {
 };
 
 export enum MouseStrength {
-    Weak   = 8000,
-    Medium = 10000,
-    Strong = 15000,
+    Weak   = 10000,
+    Medium = 15000,
+    Strong = 20000,
 }
 
 const MOUSE_RADIUS = 20;
@@ -45,7 +45,7 @@ export class Mouse {
 
         canvas.onpointermove = event => {
             if (this.interacting) {
-                //console.log("interacting", this.pointer_x, this.pointer_y);
+                // console.log("interacting", this.pointer_x, this.pointer_y);
             } else if(this.draggingSwallower) {
                 let dx = event.x - this.pointer_x;
                 let dy = event.y - this.pointer_y;
@@ -61,7 +61,7 @@ export class Mouse {
                         p.y += dy;
                     }
                 })
-                console.log("dragging", this.pointer_x, this.pointer_y, this.swallower.x, this.swallower.y);
+                // console.log("dragging", this.pointer_x, this.pointer_y, this.swallower.x, this.swallower.y);
             }
             this.pointer_x = event.x;
             this.pointer_y = event.y;
@@ -69,7 +69,9 @@ export class Mouse {
 
         canvas.onpointerdown = event => {
             
-            console.log("canvas onpointerdown", event.buttons, event.button, event.metaKey?"meta":"", event.altKey?"alt":"", event.ctrlKey?"ctrl":"", event.shiftKey?"shift":"");
+            if(DEBUG) {
+                console.log("canvas onpointerdown", event.buttons, event.button, event.metaKey?"meta":"", event.altKey?"alt":"", event.ctrlKey?"ctrl":"", event.shiftKey?"shift":"");
+            }
             
             if(event.buttons == 1 && event.button == 0) { // left click, touch, pen
 
@@ -117,7 +119,9 @@ export class Mouse {
         };
 
         canvas.onpointerup = event => {
-            console.log("canvas onpointerup", this.pointer_x, this.pointer_y);
+            if(DEBUG) {
+                console.log("canvas onpointerup", this.pointer_x, this.pointer_y);
+            }
             if (this.interacting || this.draggingSwallower) {
                 this.interacting = false;
                 this.draggingSwallower = false;
@@ -128,14 +132,13 @@ export class Mouse {
         };
 
         canvas.oncontextmenu = event => {
-            console.log("canvas oncontextmenu");
             event.preventDefault();
             event.stopPropagation();
             return false;
         }
 
         this.show_info.onclick = () => {
-            console.log("show_info.onclick", info.isVisible);
+            // console.log("show_info.onclick", info.isVisible);
             if (info.isVisible) {
                 info.hideInfo();
             } else {
@@ -146,7 +149,7 @@ export class Mouse {
         if (document.fullscreenEnabled) {
             this.full_screen.onclick = () => {
 
-                console.log("full_screen.onclick", document.fullscreenElement);
+                // console.log("full_screen.onclick", document.fullscreenElement);
 
                 if (document.fullscreenElement) {
                     document.exitFullscreen();
@@ -197,7 +200,7 @@ export class Mouse {
                 break;
 
             default:
-                throw new Error(`unhandled mouse mode: ${MouseMode[this.mode]}`);
+                throw new Error(DEBUG ? `unhandled mouse mode: ${MouseMode[this.mode]}` : '');
         }
 
         if (DEBUG && p.trace) {
