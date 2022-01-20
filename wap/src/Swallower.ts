@@ -2,6 +2,7 @@ import { Particle } from './Particle';
 import { Info } from "./Info";
 import { randf, rande } from './Random';
 import { easeInQuad } from './Easing';
+import { Scale } from './Scale';
 
 export enum Strength {
     None =       0,
@@ -23,12 +24,12 @@ export class Swallower {
 
     public readonly strength = rande(Strength, {[Strength.None]:0});
     public readonly radius = Radius[this.strength];
-    public x = this.context.canvas.width * randf(0.1, 0.8);
-    public y = this.context.canvas.height * randf(0.1, 0.8);
+    public x = this.scale.width * randf(0.1, 0.8);
+    public y = this.scale.height * randf(0.1, 0.8);
 
     private frame_strength:number = 0;
 
-    constructor(info:Info, private context:CanvasRenderingContext2D) {
+    constructor(info:Info, private scale:Scale) {
         info.addStat("swallower", Strength[this.strength].toLowerCase());
     }
 

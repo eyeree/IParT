@@ -69,7 +69,7 @@ export class Size {
 
     update(p:Particle, dt:number) {
         const update = this._update(p);
-        p.radius = update * p.health;
+        // p.radius = update * p.health;
         // p.radius = Math.floor(update * p.health);
         if(p.trace) {
             console.log("[Size] %s radius: %.4f - update: %.4f - health: %.4f", SizeMode[this.mode], p.radius, update, p.health);

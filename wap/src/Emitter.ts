@@ -1,7 +1,8 @@
 import { Info } from './Info';
 import { Particle } from './Particle';
-import { GravityLevel, Position } from './Position';
+import { Position } from './Position';
 import { rande, randf, randfs } from './Random';
+import { Scale } from './Scale';
 
 enum Location {
     Interior,
@@ -61,7 +62,7 @@ export class Emitter {
 
     private next: number = 0;
 
-    constructor(info:Info, private canvas:HTMLCanvasElement, private position:Position) {
+    constructor(info:Info, private resize:Scale, private position:Position) {
         if(this.location == Location.Interior) {
             this.min_x = randf(CENTER_MARGIN, 1 - CENTER_MARGIN);
             this.min_y = randf(CENTER_MARGIN, 1 - CENTER_MARGIN);
@@ -127,8 +128,8 @@ export class Emitter {
     }
 
     public init_position(p:Particle) {
-        p.x = randf(this.min_x, this.max_x) * this.canvas.width;
-        p.y = randf(this.min_y, this.max_y) * this.canvas.height;
+        p.x = randf(this.min_x, this.max_x) * this.resize.width;
+        p.y = randf(this.min_y, this.max_y) * this.resize.height;
         switch(this.location) {
             case Location.Interior:
                 p.x -= randf(-2, 2);
@@ -165,13 +166,13 @@ export class Emitter {
                     if(p.y >= p.radius) p.edgeDetect = true;
                     break;
                 case Location.Bottom:
-                    if(p.y < this.canvas.height - p.radius) p.edgeDetect = true;
+                    if(p.y < this.resize.height - p.radius) p.edgeDetect = true;
                     break;
                 case Location.Left:
                     if(p.x >= p.radius) p.edgeDetect = true;
                     break;
                 case Location.Right:
-                    if(p.x < this.canvas.width - p.radius) p.edgeDetect = true;
+                    if(p.x < this.resize.width - p.radius) p.edgeDetect = true;
                     break;
             }
             if(DEBUG && p.trace) {

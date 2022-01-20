@@ -4,6 +4,7 @@ import { rande } from './Random';
 import { Particle, Trace } from './Particle';
 import { Swallower } from './Swallower';
 import { ParticleSet } from './ParticleSet';
+import { Scale } from './Scale';
 
 export enum MouseMode {
     Push,
@@ -37,7 +38,7 @@ export class Mouse {
 
     public restart:boolean = false;
 
-    constructor(private info: Info, private context: CanvasRenderingContext2D, private _frame:Frame, private swallower:Swallower, private particles:ParticleSet) {
+    constructor(private info: Info, private context: CanvasRenderingContext2D, private _frame:Frame, private swallower:Swallower, private particles:ParticleSet, private resize:Scale) {
 
         info.addStat("mouse strength", `${MouseStrength[this.strength].toLocaleLowerCase()}`);
 
@@ -51,8 +52,8 @@ export class Mouse {
                 let dy = event.y - this.pointer_y;
                 const x = swallower.x;
                 const y = swallower.y;
-                swallower.x = Math.max(SWALLOWER_MARGIN, Math.min(context.canvas.width - SWALLOWER_MARGIN, swallower.x + dx));
-                swallower.y = Math.max(SWALLOWER_MARGIN, Math.min(context.canvas.height - SWALLOWER_MARGIN, swallower.y + dy));
+                swallower.x = Math.max(SWALLOWER_MARGIN, Math.min(resize.width - SWALLOWER_MARGIN, swallower.x + dx));
+                swallower.y = Math.max(SWALLOWER_MARGIN, Math.min(resize.height - SWALLOWER_MARGIN, swallower.y + dy));
                 dx = swallower.x - x;
                 dy = swallower.y - y;
                 particles.forEach(p => {
@@ -174,6 +175,15 @@ export class Mouse {
     frame(dt: number) {
         if(!this.interacting) return;
         this.frame_strength = this.strength * dt;
+        if(this.interacting || this.draggingSwallower) {
+            this.context.beginPath();
+            this.context.strokeStyle = "white";
+            this.context.moveTo(0, this.pointer_y);
+            this.context.lineTo(this.resize.width, this.pointer_y);
+            this.context.moveTo(this.pointer_x, 0);
+            this.context.lineTo(this.pointer_x, this.resize.height);
+            this.context.stroke();
+        }
     }
 
     update(p:Particle) {

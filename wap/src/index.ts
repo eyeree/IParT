@@ -8,7 +8,7 @@ import { Emitter } from './Emitter';
 import { Info } from './Info';
 import { Mouse } from './Mouse';
 import { Frame } from './Frame';
-import { Resize } from './Resize';
+import { Scale as Scale } from './Scale';
 import { Swallower } from './Swallower';
 import { Position } from './Position';
 import { Visualizer } from './Visualizer';
@@ -20,27 +20,24 @@ import { seed } from './Random';
 window.onhashchange = () => window.location.reload();
 
 window.onload = () => {
+
     const canvas = document.createElement("canvas");
     document.body.appendChild(canvas);
-    run(canvas);
-}
 
-function run(canvas:HTMLCanvasElement) {
+    const context = canvas.getContext("2d");
+    if (context == null) throw new Error("canvas 2d context is not supported");   
 
     seed(tokenId);
 
-    const context = canvas.getContext("2d");
-    if (context == null) throw new Error("canvas 2d context is not supported");
-
     const info = new Info(tokenId);
-    const resize = new Resize(info, canvas);
+    const scale = new Scale(info, context);
     const frame = new Frame(info);
     const particles = new ParticleSet(info);
-    const swallower = new Swallower(info, context);
-    const mouse = new Mouse(info, context, frame, swallower, particles);
-    const visualizer = new Visualizer(info, context, swallower);
-    const position = new Position(info, canvas);
-    const emitter = new Emitter(info, canvas, position);
+    const swallower = new Swallower(info, scale);
+    const mouse = new Mouse(info, context, frame, swallower, particles, scale);
+    const visualizer = new Visualizer(info, context, swallower, scale);
+    const position = new Position(info, canvas, scale);
+    const emitter = new Emitter(info, scale, position);
     const lifetime = new Lifetime(info);
     const size = new Size(info);
     
@@ -82,11 +79,7 @@ function run(canvas:HTMLCanvasElement) {
             particles.add(p);
         }
 
-        if(mouse.restart) {
-            run(canvas);
-        } else {
-            window.requestAnimationFrame(update);
-        }
+        window.requestAnimationFrame(update);
 
     }
 

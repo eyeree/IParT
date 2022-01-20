@@ -2,6 +2,7 @@ import { easeInCubic } from './Easing';
 import { Info } from './Info';
 import { Particle } from './Particle';
 import { rande, randf, randfs } from './Random';
+import { Scale } from './Scale';
 
 enum EdgeMode {
     Kill,
@@ -41,7 +42,7 @@ export class Position {
         [EdgeMode.Bounce]: (p:Particle) => this.edgeBounce(p)
     }[this.edgeMode];
 
-    constructor(info:Info, private canvas:HTMLCanvasElement) {
+    constructor(info:Info, private canvas:HTMLCanvasElement, private scale:Scale) {
         info.addStat("friction", FrictionLevel[this.friction].toLowerCase());
         info.addStat("gravity", GravityLevel[this.gravity]);
     }
@@ -82,6 +83,9 @@ export class Position {
 
         p.x += p.dx * dt;
         p.y += p.dy * dt;
+
+        // p.x += this.scale.dpr * p.dx * dt;
+        // p.y += this.scale.dpr * p.dy * dt;
     
         if (DEBUG && p.trace) {
             console.log("[Position] x: %.2f - y: %.2f - dx: %.4f - dy: %.4f - frame_friction: %.4f - friction: %.4f - frame_gravity: %.4f - gravity: %.4f - swallowed %s", p.x, p.y, p.dx, p.dy, this.frame_friction, this.friction, this.frame_gravity, this.gravity, p.swallowed);
@@ -107,8 +111,8 @@ export class Position {
             if (DEBUG && p.trace) {
                 console.log("[Position] LEFT - x: %f - dx: %f", p.x, p.dx);
             }
-        } else if (p.x > this.canvas.width - p.radius) {
-            p.x = this.canvas.width - p.radius;
+        } else if (p.x > this.scale.width - p.radius) {
+            p.x = this.scale.width - p.radius;
             if (Math.abs(p.dy) < 0.5) {
                 p.dy = randfs(this.minDeflection, this.maxDeflection);;
                 if (DEBUG && p.trace) {
@@ -131,8 +135,8 @@ export class Position {
             if (DEBUG && p.trace) {
                 console.log("[Position] TOP - y: %f - dy: %f", p.y, p.dy);
             }
-        } else if (p.y > this.canvas.height - p.radius) {
-            p.y = this.canvas.height - p.radius;
+        } else if (p.y > this.scale.height - p.radius) {
+            p.y = this.scale.height - p.radius;
             if (Math.abs(p.dx) < 0.5) {
                 p.dx = randfs(this.minDeflection, this.maxDeflection);
                 if (DEBUG && p.trace) {
@@ -149,9 +153,9 @@ export class Position {
 
     private edgeKill(p:Particle) {
         if (p.x < 0 - p.radius ||
-            p.x > this.canvas.width + p.radius ||
+            p.x > this.scale.width + p.radius ||
             p.y < 0 - p.radius ||
-            p.y > this.canvas.height + p.radius
+            p.y > this.scale.height + p.radius
         ) {
             p.kill();
             if (DEBUG && p.trace) {
