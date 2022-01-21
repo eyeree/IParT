@@ -1,0 +1,3 @@
+[submodule "wap/dist"]
+	path = wap/dist
+	url = https://github.com/eyeree/IParTDist

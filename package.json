@@ -1,5 +1,5 @@
 {
-  "name": "partoken",
+  "name": "ipart",
   "version": "1.0.0",
   "description": "Particle NFT",
   "devDependencies": {
@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/eyeree/partoken.git"
+    "url": "git+https://github.com/eyeree/IParT.git"
   },
   "keywords": [
     "html",
@@ -27,9 +27,9 @@
   "author": "eyeree",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/eyeree/partoken/issues"
+    "url": "https://github.com/eyeree/IParT/issues"
   },
-  "homepage": "https://github.com/eyeree/partoken#readme",
+  "homepage": "https://github.com/eyeree/IParT#readme",
   "dependencies": {
     "@types/chroma-js": "^2.1.3",
     "chroma-js": "^2.1.2",
