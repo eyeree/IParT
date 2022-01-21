@@ -1,4 +1,5 @@
 import { Info } from './Info';
+import { ParticleSet } from './ParticleSet';
 
 export class Scale {
 
@@ -6,12 +7,17 @@ export class Scale {
     public height = 0;
     public dpr = 0;
 
-    constructor(private info: Info, private context: CanvasRenderingContext2D) {
+    constructor(private info: Info, private context: CanvasRenderingContext2D, private particles:ParticleSet) {
 
         const setSize = () => {
+
             this.dpr = window.devicePixelRatio || 1;
-            console.log("DPR", this.dpr);
+
             const rect = context.canvas.getBoundingClientRect();
+
+            const dx = rect.width / this.width;
+            const dy = rect.height / this.height;
+
             this.width = rect.width;
             this.height = rect.height;
             
@@ -24,6 +30,11 @@ export class Scale {
             context.canvas.width = rect.width * this.dpr;
             context.canvas.height = rect.height * this.dpr;
             context.scale(this.dpr, this.dpr);
+
+            particles.forEach(p => {
+                p.x *= dx;
+                p.y *= dy;
+            });
             
         };
 

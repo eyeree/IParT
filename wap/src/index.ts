@@ -30,9 +30,9 @@ window.onload = () => {
     seed(tokenId);
 
     const info = new Info(tokenId);
-    const scale = new Scale(info, context);
     const frame = new Frame(info);
     const particles = new ParticleSet(info);
+    const scale = new Scale(info, context, particles);
     const swallower = new Swallower(info, scale);
     const mouse = new Mouse(info, context, frame, swallower, particles, scale);
     const visualizer = new Visualizer(info, context, swallower, scale);

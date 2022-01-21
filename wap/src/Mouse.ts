@@ -175,15 +175,15 @@ export class Mouse {
     frame(dt: number) {
         if(!this.interacting) return;
         this.frame_strength = this.strength * dt;
-        if(this.interacting || this.draggingSwallower) {
-            this.context.beginPath();
-            this.context.strokeStyle = "white";
-            this.context.moveTo(0, this.pointer_y);
-            this.context.lineTo(this.resize.width, this.pointer_y);
-            this.context.moveTo(this.pointer_x, 0);
-            this.context.lineTo(this.pointer_x, this.resize.height);
-            this.context.stroke();
-        }
+        // if(this.interacting || this.draggingSwallower) {
+        //     this.context.beginPath();
+        //     this.context.strokeStyle = "white";
+        //     this.context.moveTo(0, this.pointer_y);
+        //     this.context.lineTo(this.resize.width, this.pointer_y);
+        //     this.context.moveTo(this.pointer_x, 0);
+        //     this.context.lineTo(this.pointer_x, this.resize.height);
+        //     this.context.stroke();
+        // }
     }
 
     update(p:Particle) {
