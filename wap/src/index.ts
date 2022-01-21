@@ -2,7 +2,6 @@ declare global { const DEBUG:boolean; }
 
 import './ErrorHandler';
 
-import { tokenId } from './TokenId';
 import { ParticleSet } from './ParticleSet';
 import { Emitter } from './Emitter';
 import { Info } from './Info';
@@ -15,7 +14,6 @@ import { Visualizer } from './Visualizer';
 import { Lifetime } from './Lifetime';
 import { Particle } from './Particle';
 import { Size } from './Size';
-import { seed } from './Random';
 
 window.onhashchange = () => window.location.reload();
 
@@ -27,9 +25,7 @@ window.onload = () => {
     const context = canvas.getContext("2d");
     if (context == null) throw new Error("canvas 2d context is not supported");   
 
-    seed(tokenId);
-
-    const info = new Info(tokenId);
+    const info = new Info();
     const frame = new Frame(info);
     const particles = new ParticleSet(info);
     const scale = new Scale(info, context, particles);

@@ -1,4 +1,5 @@
 
+/*
 export class Trace {
     
     public constructor() {
@@ -63,17 +64,18 @@ export class Trace {
     }
 
 }
-
+*/
 class NoTrace {
+    public static traceOne() {}
+    public static toggleTrace() {}
+    public static startTrace() {}
+    public static stopTrace() {}
+    public static readonly isTracing = false;
     public readonly trace = false;
     public died() {}
 }
 
-function Base():typeof Trace| typeof NoTrace {
-    return DEBUG ? Trace : NoTrace;
-}
-
-export class Particle extends Trace {
+export class Particle extends NoTrace {
 
     public x: number = 0;
     public y: number = 0;

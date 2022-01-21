@@ -751,7 +751,7 @@ export class Visualizer {
     private pickColor(p: Particle, mode: BrightMode): number {
         const f = ColorFactor[mode](p);
         const i = Math.floor((NUM_COLOR_STEPS - 1) * f);
-        if (p.trace) {
+        if (DEBUG && p.trace) {
             console.log("[Visualized] %s - f: %4.4f - i %d - age: %1.4f - speed: %4.4f - dx: %4.4f - dy: %4.4f", BrightMode[mode], f, i, p.age / p.life, p.speed, p.dx, p.dy);
         }
         return i;

@@ -1,3 +1,5 @@
+import { tokenId } from './TokenId';
+
 export type GetStat = () => number|string;
 
 export class Info {
@@ -10,7 +12,7 @@ export class Info {
 
     private interval = -1;
 
-    constructor(private tokenId: number) {
+    constructor() {
         this.token_id.innerText = tokenId.toString();
     }
 

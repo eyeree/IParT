@@ -1,7 +1,7 @@
 import { Info } from './Info';
 import { Frame } from './Frame';
 import { rande } from './Random';
-import { Particle, Trace } from './Particle';
+import { Particle } from './Particle';
 import { Swallower } from './Swallower';
 import { ParticleSet } from './ParticleSet';
 import { Scale } from './Scale';
@@ -93,24 +93,28 @@ export class Mouse {
 
                 }
 
-            } else if(DEBUG && event.buttons == 4 && event.button == 1) { // scroll wheel
+            } 
+            
+            if(DEBUG) {
+                if(event.buttons == 4 && event.button == 1) { // scroll wheel
 
-                if(event.ctrlKey) {
-                    document.location.reload();
-                } else if(event.altKey) {
-                    window.open(document.location.toString(), "_top");
+                    if(event.ctrlKey) {
+                        document.location.reload();
+                    } else if(event.altKey) {
+                        window.open(document.location.toString(), "_top");
+                    }
+
+                } else if(DEBUG && event.buttons == 2 && event.button == 2) { // right click, pen barrel button
+
+                    if(event.ctrlKey) {
+                        Particle.toggleTrace();
+                    } else if(event.altKey) {
+                        Particle.stopTrace();
+                    } else {
+                        Particle.traceOne();
+                    }
+        
                 }
-
-            } else if(DEBUG && event.buttons == 2 && event.button == 2) { // right click, pen barrel button
-
-                if(event.ctrlKey) {
-                    Trace.toggleTrace();
-                } else if(event.altKey) {
-                    Trace.stopTrace();
-                } else {
-                    Trace.traceOne();
-                }
-    
             }
 
             event.preventDefault();
@@ -132,10 +136,12 @@ export class Mouse {
             }
         };
 
-        canvas.oncontextmenu = event => {
-            event.preventDefault();
-            event.stopPropagation();
-            return false;
+        if(DEBUG) {
+            canvas.oncontextmenu = event => {
+                event.preventDefault();
+                event.stopPropagation();
+                return false;
+            }
         }
 
         this.show_info.onclick = () => {

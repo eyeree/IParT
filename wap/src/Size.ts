@@ -62,7 +62,7 @@ export class Size {
     init(p:Particle) {
         p.radius = this._init(p);
         // p.radius = Math.floor(this._init(p));
-        if(p.trace) {
+        if(DEBUG && p.trace) {
             console.log("[Size] %s init radius: %.4f", SizeMode[this.mode], p.radius);
         }
     }
@@ -71,7 +71,7 @@ export class Size {
         const update = this._update(p);
         // p.radius = update * p.health;
         // p.radius = Math.floor(update * p.health);
-        if(p.trace) {
+        if(DEBUG && p.trace) {
             console.log("[Size] %s radius: %.4f - update: %.4f - health: %.4f", SizeMode[this.mode], p.radius, update, p.health);
         }
     }

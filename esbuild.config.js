@@ -4,14 +4,14 @@ const mode = process.argv[2] || "build";
 
 const buildOptions = {
     entryPoints: ["wap/src/frames.ts", "wap/src/index.ts"],
-    outdir: "wap/dist",
-    sourcemap: true,
+    outdir: "wap/esbuild",
+    sourcemap: mode != "build",
     bundle: true,
     define: {
         DEBUG: mode != "build"
     },
     minify: mode == "build",
-    target: "ES6",
+    target: "esnext",
     format: "esm"
     // incremental: mode == "dev",
 }

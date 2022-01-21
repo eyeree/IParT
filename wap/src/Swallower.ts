@@ -24,12 +24,14 @@ export class Swallower {
 
     public readonly strength = rande(Strength, {[Strength.None]:0});
     public readonly radius = Radius[this.strength];
-    public x = this.scale.width * randf(0.1, 0.8);
-    public y = this.scale.height * randf(0.1, 0.8);
+    public x:number;
+    public y:number;
 
     private frame_strength:number = 0;
 
     constructor(info:Info, private scale:Scale) {
+        this.x = this.scale.width * randf(0.1, 0.8);
+        this.y = this.scale.height * randf(0.1, 0.8);
         info.addStat("swallower", Strength[this.strength].toLowerCase());
     }
 
@@ -66,7 +68,7 @@ export class Swallower {
 
             p.swallowed = true;
 
-            if(p.trace) {
+            if(DEBUG && p.trace) {
                 console.log(
                     "[Swallowed] max_distance: %4.4f -- distance: %4.4f -- percent_to_center: %0.4f -- dx: %4.4f * %4.4f = %4.4f + %4.4f * %4.4f = %4.4f --- dy: %4.4f * %4.4f = %4.4f + %4.4f * %4.4f = %4.4f - health: %4.4f",
                     max_distance, distance, percent_to_center, dx, slow, dx * slow, ddx, slow, p.dx, dy, slow, dy * slow, ddy, slow, p.dy)

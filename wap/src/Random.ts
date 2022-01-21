@@ -1,8 +1,6 @@
-export let rand1:()=>number;
+import { tokenId } from "./TokenId";
 
-export function seed(seed:number) {
-    rand1 = mulberry32(seed);
-}
+export const rand1 = mulberry32(tokenId);
 
 export const randf = (min:number, max:number) => (rand1() * (max - min)) + min;
 export const randfs = (min:number, max:number) => randf(min, max) * Math.sign(rand1() - 0.5);
