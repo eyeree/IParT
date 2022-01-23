@@ -127,7 +127,7 @@ export class Emitter {
     
     }
 
-    public init_position(p:Particle) {
+    public initPosition(p:Particle) {
         p.x = randf(this.min_x, this.max_x) * this.resize.width;
         p.y = randf(this.min_y, this.max_y) * this.resize.height;
         switch(this.location) {
@@ -181,7 +181,7 @@ export class Emitter {
         }
     }
 
-    public init_speed(p:Particle) {
+    public initSpeed(p:Particle) {
         
         if(this.location === Location.Interior) {
 

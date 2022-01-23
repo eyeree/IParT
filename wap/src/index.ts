@@ -67,10 +67,10 @@ window.onload = () => {
 
         if(!particles.isFull && emitter.emit(dt)) {
             const p = new Particle();
-            emitter.init_speed(p);
+            emitter.initSpeed(p);
             lifetime.init(p);
             size.init(p);
-            emitter.init_position(p);
+            emitter.initPosition(p);
             visualizer.init(p);
             particles.add(p);
         }

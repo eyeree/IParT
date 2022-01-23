@@ -23,7 +23,7 @@ export class ParticleSet {
         if (!this.isFull) {
             this.particles.add(particle);
         } else {
-            console.warn("too many particles");
+            if (DEBUG) console.warn("too many particles");
         }
     }
 

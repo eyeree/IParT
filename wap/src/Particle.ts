@@ -1,4 +1,5 @@
 
+/*
 export class Trace {
     
     public constructor() {
@@ -63,6 +64,7 @@ export class Trace {
     }
 
 }
+*/
 class NoTrace {
     public static traceOne() {}
     public static toggleTrace() {}
@@ -73,7 +75,7 @@ class NoTrace {
     public died() {}
 }
 
-export class Particle extends Trace {
+export class Particle extends NoTrace {
 
     public x: number = 0;
     public y: number = 0;
