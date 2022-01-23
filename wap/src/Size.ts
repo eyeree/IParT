@@ -2,16 +2,16 @@ import { Info } from "./Info";
 import { Particle } from "./Particle";
 import { rande } from "./Random";
 
-export const MIN_RADIUS = 5;
-export const MAX_RADIUS = 20;
+export const MIN_RADIUS = 10;
+export const MAX_RADIUS = 25;
 export const RADIUS_RANGE = MAX_RADIUS - MIN_RADIUS;
 
 export const MAX_SPEED = 50;
 
 enum SizeRadius {
-    Small = 5,
-    Medium = 10,
-    Large = 15,
+    Small = 10,
+    Medium = 15,
+    Large = 20,
 }
 
 export enum SizeMode {    
@@ -69,7 +69,7 @@ export class Size {
 
     update(p:Particle, dt:number) {
         const update = this._update(p);
-        // p.radius = update * p.health;
+        p.radius = update * p.health;
         // p.radius = Math.floor(update * p.health);
         if(DEBUG && p.trace) {
             console.log("[Size] %s radius: %.4f - update: %.4f - health: %.4f", SizeMode[this.mode], p.radius, update, p.health);

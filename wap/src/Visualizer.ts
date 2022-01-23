@@ -45,6 +45,110 @@ const OUTER_GRID_LEFT = 0;
 const INNER_GRID_LEFT = GRID_SIZE * MAX_RADIUS;
 const NUM_COLOR_STEPS = 40;
 
+// function increaseBrightness( color:string, amount:number ) {
+//   const r = parseInt(color.substr(1, 2), 16);
+//   const g = parseInt(color.substr(3, 2), 16);
+//   const b = parseInt(color.substr(5, 2), 16);
+//   const hsl = rgbToHsl( r, g, b );
+//   hsl.l += hsl.l + (amount / 100);
+//   if( hsl.l > 1 ) hsl.l = 1;
+//   const rgb = hslToRgb( hsl.h, hsl.s, hsl.l );
+
+//   var v = rgb.b | (rgb.g << 8) | (rgb.r << 16);
+//   return '#' + v.toString(16);
+// }
+
+// function rgbToHsl(r:number, g:number, b:number){
+//   r /= 255, g /= 255, b /= 255;
+//   const max = Math.max(r, g, b), min = Math.min(r, g, b);
+//   let h:number 
+//   let s:number
+//   const l = (max + min) / 2;
+
+//   if(max == min){
+//       h = s = 0; // achromatic
+//   }else{
+//       var d = max - min;
+//       s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+//       switch(max){
+//           case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+//           case g: h = (b - r) / d + 2; break;
+//           case b: h = (r - g) / d + 4; break;
+//       }
+//       h! /= 6;
+//   }
+//   return {'h':h!, 's':s, 'l':l};
+// }
+
+// function hslToRgb(h:number, s:number, l:number){
+//   var r, g, b;
+
+//   if(s == 0){
+//       r = g = b = l; // achromatic
+//   }else{
+//       function hue2rgb(p:number, q:number, t:number){
+//           if(t < 0) t += 1;
+//           if(t > 1) t -= 1;
+//           if(t < 1/6) return p + (q - p) * 6 * t;
+//           if(t < 1/2) return q;
+//           if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+//           return p;
+//       }
+
+//       var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+//       var p = 2 * l - q;
+//       r = hue2rgb(p, q, h + 1/3);
+//       g = hue2rgb(p, q, h);
+//       b = hue2rgb(p, q, h - 1/3);
+//   }
+
+//   return { 'r':r * 255, 'g':g * 255, 'b':b * 255 };
+// }
+
+
+
+// const RGB_Linear_Shade=(p,c)=>{
+//   var i=parseInt,r=Math.round,[a,b,c,d]=c.split(","),P=p<0,t=P?0:255*p,P=P?1+p:1-p;
+//   return"rgb"+(d?"a(":"(")+r(i(a[3]=="a"?a.slice(5):a.slice(4))*P+t)+","+r(i(b)*P+t)+","+r(i(c)*P+t)+(d?","+d:")");
+// }
+
+
+const BACKGROUND_COLORS = [
+    "DarkRed",
+    "Indigo",
+    "DarkGreen",
+    "DarkGoldenrod",
+    "MidnightBlue",
+    "Maroon",
+    "DarkSlateGray",
+]
+
+const PARTICLE_COLORS = [
+    "Gray",
+    "DarkOrange",
+    "Goldenrod",
+    "Sienna",
+    "MediumBlue",
+    "CornflowerBlue",
+    "DeepSkyBlue",
+    "DarkTurquoise",
+    "LightSeaGreen",
+    "OliveDrab",
+    "ForestGreen",
+    "LimeGreen",
+    "DarkSlateBlue",
+    "Purple",
+    "RebeccaPurple",
+    "Magenta",
+    "Khaki",
+    "Gold",
+    "Yellow",
+    "Orange",
+    "MediumVioletRed",
+    "Crimson",
+    "Salmon"
+]
+
 let pallets = [
     {
       "name": "purple",
@@ -572,7 +676,7 @@ let pallets = [
 // }
 export class Visualizer {
 
-    private readonly pallet = randa(pallets);
+    // private readonly pallet = randa(pallets);
     private readonly particlesCanvas = document.createElement("canvas");
     private readonly particlesContext = this.particlesCanvas.getContext('2d')!;
     private readonly swallowerCanvas = document.createElement("canvas");
@@ -580,6 +684,11 @@ export class Visualizer {
 
     private readonly innerMode: BrightMode;
     private readonly outerMode: BrightMode;
+
+    private readonly highlight = randa(BACKGROUND_COLORS);
+    private readonly background = this.getBackgroundColor(this.highlight);
+    private readonly color1 = randa(PARTICLE_COLORS);
+    private readonly color2 = randa(PARTICLE_COLORS);
 
     constructor(info: Info, private context: CanvasRenderingContext2D, private swallower: Swallower, private scale: Scale) {
 
@@ -601,15 +710,98 @@ export class Visualizer {
         this.prerenderParticles();
         this.prerenderSwallower();
 
-        info.addStat("background", this.pallet.name);
-        info.addStat("outer color", BrightMode[this.outerMode]);
-        info.addStat("inner color", BrightMode[this.innerMode]);
+        info.addStat("background", this.highlight);
+        info.addStat("outer color", this.color1);
+        info.addStat("inner color", this.color2);
+        info.addStat("outer mode", BrightMode[this.outerMode]);
+        info.addStat("inner mode", BrightMode[this.innerMode]);
 
         const style = document.createElement('style');
-        style.textContent = `.highlight { border-color: ${this.pallet.highlight} }`;
+        style.textContent = `.highlight { border-color: ${this.highlight} }`;
         document.head.append(style);
 
     }
+
+
+    toColorArray(color:string):Array<number> {
+        this.particlesContext.fillStyle = color;
+        const [r, g, b] = this.particlesContext.fillStyle.substring(1).match(/.{2}/g)!;
+        return [parseInt(r, 16), parseInt(g, 16), parseInt(b, 16)];
+    }
+
+    toColorString(color:Array<number>) {
+
+        let r = Math.floor(color[0]).toString(16)
+        let g = Math.floor(color[1]).toString(16)
+        let b = Math.floor(color[2]).toString(16)
+
+        const rr = (r.length < 2 ? '0' : '') + r
+        const gg = (g.length < 2 ? '0' : '') + g
+        const bb = (b.length < 2 ? '0' : '') + b
+      
+        return `#${rr}${gg}${bb}`
+
+        // return `rgb(${color[0]},${color[1]},${color[2]})`
+    }
+
+    getParticleColors(color:string):Array<string> {
+
+        const rgb = this.toColorArray(color);
+
+        const step = 100 / NUM_COLOR_STEPS;
+
+        const result = new Array<string>(NUM_COLOR_STEPS);
+        for(let i = 0; i < result.length; ++i) {
+            rgb[0] = Math.min(255, rgb[0] + step);
+            rgb[1] = Math.min(255, rgb[1] + step);
+            rgb[2] = Math.min(255, rgb[2] + step);
+            result[i] = this.toColorString(rgb);
+        }
+
+        return result;
+
+    }
+
+    getBackgroundColor(color:string):string {
+        const rgb = this.toColorArray(color);
+        rgb[0] = Math.max(0, rgb[0] - 75);
+        rgb[1] = Math.max(0, rgb[1] - 75);
+        rgb[2] = Math.max(0, rgb[2] - 75);
+        return this.toColorString(rgb);
+    }
+
+    // shade(col:string, amt:number) {
+    //     // col = col.replace(/^#/, '')
+    //     // if (col.length === 3) col = col[0] + col[0] + col[1] + col[1] + col[2] + col[2]
+      
+    //     const [r1, g1, b1] = col.substring(1).match(/.{2}/g)!;
+    //     const [r2, g2, b2] = [parseInt(r1, 16) + amt, parseInt(g1, 16) + amt, parseInt(b1, 16) + amt];
+      
+    //     const r3 = Math.max(Math.min(255, r2), 0).toString(16)
+    //     const g3 = Math.max(Math.min(255, g2), 0).toString(16)
+    //     const b3 = Math.max(Math.min(255, b2), 0).toString(16)
+      
+    //     const r4 = (r3.length < 2 ? '0' : '') + r3
+    //     const g4 = (g3.length < 2 ? '0' : '') + g3
+    //     const b4 = (b3.length < 2 ? '0' : '') + b3
+      
+    //     return `#${r4}${g4}${b4}`
+    // }
+    
+    // increase_brightness(color:string,percent:number)
+    // {
+    
+    //     this.particlesContext.fillStyle = color;
+    //     this.particlesContext.fillRect(0,0,1,1);
+
+    //     const id = this.particlesContext.getImageData(0,0,1,1);
+    //     const r = id.data[0] + Math.floor( percent / 100 * 255 );
+    //     const g = id.data[1] + Math.floor( percent / 100 * 255 );
+    //     const b = id.data[2] + Math.floor( percent / 100 * 255 );
+
+    //     return 'rgb('+r+','+g+','+b+')';
+
+    // }
 
     private prerenderSwallower() {
 
@@ -624,7 +816,7 @@ export class Visualizer {
         var gradient = this.swallowerContext.createRadialGradient(x, y, r1, x, y, r2);
 
         gradient.addColorStop(0, '#00000000');
-        gradient.addColorStop(0.2, this.pallet.highlight);
+        gradient.addColorStop(0.2, this.highlight);
         gradient.addColorStop(1, '#000000ff');
 
         this.swallowerContext.fillStyle = gradient;
@@ -638,11 +830,14 @@ export class Visualizer {
         this.particlesCanvas.height = (GRID_SIZE * NUM_COLOR_STEPS) * this.scale.dpr;
         this.particlesContext.scale(this.scale.dpr, this.scale.dpr);
 
+        const colors1 = this.getParticleColors(this.color1);
+        const colors2 = this.getParticleColors(this.color2);
+
         for (let r1 = 0; r1 <= MAX_RADIUS; ++r1) {
             const left = r1 * GRID_SIZE;
             for (let c = 0; c < NUM_COLOR_STEPS; ++c) {
-                const c1 = this.pallet.color1[c];
-                const c2 = this.pallet.color2[c];
+                const c1 = colors1[c];
+                const c2 = colors2[c];
                 this.drawOuterGradient(this.particlesContext, GRID_SIZE * c, OUTER_GRID_LEFT + left, r1, c1);
                 this.drawInnerGradient(this.particlesContext, GRID_SIZE * c, INNER_GRID_LEFT + left, r1, c2);
             }
@@ -761,7 +956,7 @@ export class Visualizer {
 
         const ctx = this.context;
 
-        ctx.fillStyle = this.pallet.background;
+        ctx.fillStyle = this.background;
         ctx.fillRect(0, 0, this.scale.width, this.scale.height);
 
         const x = this.swallower.x;

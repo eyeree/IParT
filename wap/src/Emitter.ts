@@ -211,12 +211,12 @@ export class Emitter {
                     ddy = -(speed + this.position.gravity);
                     break;
                 case Location.Left:
-                    ddx = speed;
-                    ddy = divergence - this.position.gravity / 2;
+                    ddx = speed + this.position.gravity * 0.8;
+                    ddy = divergence - this.position.gravity * 1.1;
                     break;
                 case Location.Right:
-                    ddx = -speed;
-                    ddy = divergence - this.position.gravity / 2;
+                    ddx = -speed - this.position.gravity * 0.8;
+                    ddy = divergence - this.position.gravity * 1.1;
                     break;
             }
 

@@ -40,6 +40,11 @@ function error(reason) {
 
 function success(result) {
     console.log(result)
+    var os = require('os');
+
+    var networkInterfaces = os.networkInterfaces();
+    
+    console.log(networkInterfaces);
 }
 
 switch(mode) {
