@@ -7,6 +7,7 @@ export class Info {
     private readonly info = document.getElementById("info")! as HTMLDivElement;
     private readonly stats = document.getElementById("stats")! as HTMLDListElement;
     private readonly token_id = document.getElementById("token_id") as HTMLSpanElement;
+    private readonly link = this.info.querySelector("a")!;
 
     private readonly updateFunctions = new Set<() => void>();
 
@@ -14,6 +15,7 @@ export class Info {
 
     constructor() {
         this.token_id.innerText = tokenId.toString();
+        this.link.href = this.link.href + "#" + tokenId.toString();
     }
 
     public addStat(name: string, value?: number | string | GetStat) {

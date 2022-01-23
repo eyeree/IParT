@@ -1,5 +1,7 @@
 import { Info } from './Info';
 import { ParticleSet } from './ParticleSet';
+import { randf } from './Random';
+import { Swallower } from './Swallower';
 
 export class Scale {
 
@@ -7,7 +9,7 @@ export class Scale {
     public height = 0;
     public dpr = 0;
 
-    constructor(private info: Info, private context: CanvasRenderingContext2D, private particles:ParticleSet) {
+    constructor(private info: Info, private context: CanvasRenderingContext2D, private particles:ParticleSet, private swallower:Swallower) {
 
         const setSize = () => {
 
@@ -31,6 +33,9 @@ export class Scale {
             context.canvas.height = rect.height * this.dpr;
             context.scale(this.dpr, this.dpr);
 
+            swallower.x *= dx;
+            swallower.y *= dy;
+
             particles.forEach(p => {
                 p.x *= dx;
                 p.y *= dy;
@@ -42,8 +47,11 @@ export class Scale {
 
         setSize();
 
-        info.addStat("window", () => `${context.canvas.clientWidth}x${context.canvas.clientHeight}`);
-        info.addStat("dpr", () => window.devicePixelRatio);
+        swallower.x = this.width * randf(0.1, 0.9);
+        swallower.y = this.height * randf(0.1, 0.9);        
+
+        // info.addStat("window", () => `${context.canvas.clientWidth}x${context.canvas.clientHeight}`);
+        // info.addStat("dpr", () => window.devicePixelRatio);
 
     }
 }

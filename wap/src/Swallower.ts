@@ -24,14 +24,12 @@ export class Swallower {
 
     public readonly strength = rande(Strength, {[Strength.None]:0});
     public readonly radius = Radius[this.strength];
-    public x:number;
-    public y:number;
+    public x:number = 0;
+    public y:number = 0;
 
     private frame_strength:number = 0;
 
-    constructor(info:Info, private scale:Scale) {
-        this.x = this.scale.width * randf(0.1, 0.8);
-        this.y = this.scale.height * randf(0.1, 0.8);
+    constructor(info:Info) {
         info.addStat("swallower", Strength[this.strength].toLowerCase());
     }
 

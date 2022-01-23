@@ -28,8 +28,8 @@ window.onload = () => {
     const info = new Info();
     const frame = new Frame(info);
     const particles = new ParticleSet(info);
-    const scale = new Scale(info, context, particles);
-    const swallower = new Swallower(info, scale);
+    const swallower = new Swallower(info);
+    const scale = new Scale(info, context, particles, swallower);
     const mouse = new Mouse(info, context, frame, swallower, particles, scale);
     const visualizer = new Visualizer(info, context, swallower, scale);
     const position = new Position(info, canvas, scale);
