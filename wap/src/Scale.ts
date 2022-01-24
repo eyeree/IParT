@@ -33,6 +33,9 @@ export class Scale {
             context.canvas.height = rect.height * this.dpr;
             context.scale(this.dpr, this.dpr);
 
+            if(DEBUG) {
+                console.log("[Scale] dx: %2.4f - dy: %2.4f - dpr: %4.4f - width: %2.4f - height: %2.4f", dx, dy, this.dpr, this.width, this.height);
+            }
             swallower.x *= dx;
             swallower.y *= dy;
 

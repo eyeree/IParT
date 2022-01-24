@@ -47,11 +47,11 @@ const NUM_COLOR_STEPS = 40;
 
 const BACKGROUND_COLORS = [
     "DarkRed",
-    "Indigo",
-    "DarkGreen",
+    "Purple",
+    "DarkOliveGreen",
     "DarkGoldenrod",
-    "MidnightBlue",
-    "Maroon",
+    "DarkBlue",
+    "Teal",
     "DarkSlateGray",
 ]
 
@@ -96,6 +96,8 @@ export class Visualizer {
     private readonly color1 = randa(PARTICLE_COLORS);
     private readonly color2 = randa(PARTICLE_COLORS);
 
+    private lastDPR = 0;
+
     constructor(info: Info, private context: CanvasRenderingContext2D, private swallower: Swallower, private scale: Scale) {
 
         this.innerMode = rande(BrightMode);
@@ -113,6 +115,7 @@ export class Visualizer {
                 break;
         }
 
+        this.lastDPR = scale.dpr;
         this.prerenderParticles();
         this.prerenderSwallower();
 
@@ -169,9 +172,9 @@ export class Visualizer {
 
     private getBackgroundColor(color:string):string {
         const rgb = this.toColorArray(color);
-        rgb[0] = Math.max(0, rgb[0] - 75);
-        rgb[1] = Math.max(0, rgb[1] - 75);
-        rgb[2] = Math.max(0, rgb[2] - 75);
+        rgb[0] = Math.max(0, rgb[0] - 85);
+        rgb[1] = Math.max(0, rgb[1] - 85);
+        rgb[2] = Math.max(0, rgb[2] - 85);
         return this.toColorString(rgb);
     }
 
@@ -325,6 +328,12 @@ export class Visualizer {
     }
 
     public drawBackground() {
+
+        if(this.lastDPR != this.scale.dpr) {
+            this.lastDPR = this.scale.dpr;
+            this.prerenderParticles();
+            this.prerenderSwallower();
+        }
 
         const ctx = this.context;
 

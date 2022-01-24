@@ -43,36 +43,44 @@ window.onload = () => {
 
         visualizer.drawBackground();
 
-        position.frame(dt);
-        swallower.frame(dt);
-        lifetime.frame(dt);
-        mouse.frame(dt);
+        if(frame.paused) {
 
-        particles.forEach(p => {
+            particles.forEach(p=>visualizer.drawParticle(p));
 
-            swallower.update(p, dt);
-            mouse.update(p);
-            lifetime.update(p, dt);
-            size.update(p, dt);
-            emitter.update(p);
-            position.update(p, dt);       
+        } else {
 
-            if(p.isDead) {
-                particles.remove(p);
-            } else {
-                visualizer.drawParticle(p);
+            position.frame(dt);
+            swallower.frame(dt);
+            lifetime.frame(dt);
+            mouse.frame(dt);
+
+            particles.forEach(p => {
+
+                swallower.update(p, dt);
+                mouse.update(p);
+                lifetime.update(p, dt);
+                size.update(p, dt);
+                emitter.update(p);
+                position.update(p, dt);       
+
+                if(p.isDead) {
+                    particles.remove(p);
+                } else {
+                    visualizer.drawParticle(p);
+                }
+
+            });
+
+            if(!particles.isFull && emitter.emit(dt)) {
+                const p = new Particle();
+                emitter.initSpeed(p);
+                lifetime.init(p);
+                size.init(p);
+                emitter.initPosition(p);
+                visualizer.init(p);
+                particles.add(p);
             }
 
-        });
-
-        if(!particles.isFull && emitter.emit(dt)) {
-            const p = new Particle();
-            emitter.initSpeed(p);
-            lifetime.init(p);
-            size.init(p);
-            emitter.initPosition(p);
-            visualizer.init(p);
-            particles.add(p);
         }
 
         window.requestAnimationFrame(update);

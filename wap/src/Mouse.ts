@@ -25,6 +25,8 @@ export class Mouse {
 
     private readonly show_info = document.getElementById("show_info")! as HTMLDivElement;
     private readonly full_screen = document.getElementById("full_screen")! as HTMLDivElement;
+    private readonly restart = document.getElementById("restart")! as HTMLDivElement;
+    private readonly pause = document.getElementById("pause")! as HTMLDivElement;
 
     private pointer_x = 0;
     private pointer_y = 0;
@@ -35,8 +37,6 @@ export class Mouse {
     private interacting = false;
 
     private draggingSwallower: boolean = false;
-
-    public restart:boolean = false;
 
     constructor(private info: Info, private context: CanvasRenderingContext2D, private _frame:Frame, private swallower:Swallower, private particles:ParticleSet, private resize:Scale) {
 
@@ -98,9 +98,7 @@ export class Mouse {
             if(DEBUG) {
                 if(event.buttons == 4 && event.button == 1) { // scroll wheel
 
-                    if(event.ctrlKey) {
-                        document.location.reload();
-                    } else if(event.altKey) {
+                    if(event.altKey) {
                         window.open(document.location.toString(), "_top");
                     }
 
@@ -152,6 +150,14 @@ export class Mouse {
                 info.showInfo();
             }
         };
+
+        this.restart.onclick = () => {
+            document.location.reload();
+        }
+
+        this.pause.onclick = () => {
+            this._frame.paused = !this._frame.paused;
+        }
 
         if (document.fullscreenEnabled) {
             this.full_screen.onclick = () => {

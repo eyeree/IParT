@@ -79,37 +79,41 @@
         }
 
         #full_screen {
-          position: absolute;
           top: 0;
           right: 0;
           border-bottom-left-radius: 50%;
-          padding-right: 5px;
-          padding-top: 5px;
-          align-items: end;
-          justify-content: start;
         }
 
         #show_info {
-          position: absolute;
           bottom: 0;
           right: 0;
           border-top-left-radius: 50%;
-          padding-right: 5px;
-          padding-bottom: 5px;
-          font-size: 30px;
-          align-items: end;
-          justify-content: end;
+        }
+
+        #restart {
+          bottom: 0;
+          left: 0;
+          border-top-right-radius: 50%;
+        }
+
+        #pause {
+          top: 0;
+          left: 0;
+          border-bottom-right-radius: 50%;
         }
 
         .corner {
+          position: absolute;
           background: black;
           z-index: 2;
-          width: 40px;
-          height: 40px;
+          width: 45px;
+          height: 45px;
           flex-direction: column;
           display: flex;
           opacity: 0;
           transition: opacity 1s ease-in-out;
+          align-items: center;
+          justify-content: center;
         }
 
         .corner:hover {
@@ -129,22 +133,41 @@
     </section>
     <div id="full_screen" class="corner">
       <svg width="30" height="30" xmlns="http://www.w3.org/2000/svg">
-        <rect id="svg_11" height="12" width="4" y="18" x="26" stroke-width="0" stroke="#000000" fill="dimgray"/>
-        <rect id="svg_13" height="12" width="4" y="0" x="26" stroke-width="0" stroke="#000000" fill="dimgray"/>
-        <rect id="svg_14" height="12" width="4" y="18" x="0" stroke-width="0" stroke="#000000" fill="dimgray"/>
-        <rect id="svg_15" height="12" width="4" y="0" x="0" stroke-width="0" stroke="#000000" fill="dimgray"/>
-        <rect id="svg_16" height="4" width="12" y="26" x="18" stroke-width="0" stroke="#000000" fill="dimgray"/>
-        <rect id="svg_17" height="4" width="12" y="0" x="0" stroke-width="0" stroke="#000000" fill="dimgray"/>
-        <rect id="svg_18" height="4" width="12" y="0" x="18" stroke-width="0" stroke="#000000" fill="dimgray"/>
-        <rect id="svg_19" height="4" width="12" y="26" x="0" stroke-width="0" stroke="#000000" fill="dimgray"/>
+        <rect height="12" width="4" y="16" x="26" fill="dimgray"/>
+        <rect height="12" width="4" y="0" x="26" fill="dimgray"/>
+        <rect height="12" width="4" y="16" x="2" fill="dimgray"/>
+        <rect height="12" width="4" y="0" x="2" fill="dimgray"/>
+        <rect height="4" width="12" y="24" x="18" fill="dimgray"/>
+        <rect height="4" width="12" y="0" x="2" fill="dimgray"/>
+        <rect height="4" width="12" y="0" x="18" fill="dimgray"/>
+        <rect height="4" width="12" y="24" x="2" fill="dimgray"/>
        </svg>
     </div>
     <div id="show_info" class="corner">
       <svg width="30" height="30" xmlns="http://www.w3.org/2000/svg">
-        <ellipse stroke="dimgray" ry="14" rx="14" id="svg_20" cy="15" cx="15" stroke-width="2" fill="none"/>
-        <rect id="svg_15" height="12" width="4" y="12.23529" x="13" stroke-width="0" stroke="#000000" fill="dimgray"/>
-        <ellipse stroke-width="0" ry="2.35294" rx="2.23529" id="svg_22" cy="8.52941" cx="15" stroke="#000000" fill="dimgray"/>
+        <ellipse stroke="dimgray" ry="14" rx="14" cy="15" cx="15" stroke-width="2"/>
+        <rect height="12" width="4" y="12.23529" x="13" fill="dimgray"/>
+        <ellipse ry="2.35294" rx="2.23529" cy="8.52941" cx="15" fill="dimgray"/>
        </svg>
     </div>
+    <div id="restart" class="corner">
+      <svg width="30" height="30" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <g transform="rotate(-179.6255645751953 15.251680374145508,14.87308311462402) " id="svg_24">
+          <path stroke-width="4" d="m6.81727,14.87308c0,-6.00876 4.82841,-10.87586 10.78942,-10.87586c5.961,0 10.78942,4.8671 10.78942,10.87586c0,6.00876 -4.82841,10.87586 -10.78942,10.87586" stroke="dimgray"/>
+          <g transform="matrix(1.0231880501203128,-0.01999576710532726,0.01999576710532726,1.0231880501203128,-0.9624801416208477,0.04529844945417949) ">
+            <line stroke-width="4" x1="5.82425" y1="18.62309" x2="12.53964" y2="12.79465" stroke="dimgray"/>
+            <line stroke-width="4" x1="2.32027" y1="18.36968" x2="9.03566" y2="12.54124" transform="rotate(90 5.67796230316162,15.455462455749513) " stroke="dimgray"/>
+          </g>
+        </g>
+      </svg>
+    </div>
+    <div id="pause" class="corner">
+      <svg width="30" height="30" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+         <g>
+          <rect height="16" width="4" y="7" x="7" fill="dimgray"/>
+          <rect height="16" width="4" y="7" x="14" fill="dimgray"/>
+         </g>
+       </svg>
+      </div>
   </body>
 </html>

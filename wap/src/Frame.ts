@@ -8,8 +8,7 @@ export class Frame {
     private count = 0;
     private elapsed = 0;
     private fps = 0;
-    public debugMode = false;
-    private advanceDebugFrame = false;
+    public paused = false;
 
     constructor(private info: Info) {
         info.addStat("fps", () => Math.round(this.fps));
@@ -28,17 +27,14 @@ export class Frame {
             this.elapsed = 0;
         }
 
-        if(this.debugMode) {
-            return 1/3000;
+        if(this.paused) {
+            return 0;
         } else {
             return dt > Frame.MAX_DT ? Frame.MAX_DT : dt;
         }
 
 
-    }
 
-    nextDebugFrame() {
-        this.advanceDebugFrame = true;
     }
 
 }
