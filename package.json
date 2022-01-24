@@ -8,6 +8,7 @@
   "scripts": {
     "build": "npm run check && node esbuild.config.js build",
     "package": "npm run build && html-inline -i wap/index.html -o wap/dist/index.html",
+    "dist": "npm run package && cd wap/dist && git add . && git commit -m 'updated dist' && git push",
     "serve": "node esbuild.config.js serve",
     "watch": "node esbuild.config.js watch",
     "check": "tsc"

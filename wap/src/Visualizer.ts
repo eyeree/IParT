@@ -23,16 +23,16 @@ const NoDirection = {
     [BrightMode.Right_Brightens]: 0,
 }
 
-const MAX_MOVE = MAX_SPEED / 2;
+const MAX_MOVE = MAX_SPEED / 10; // / 2;
 
 // 0 = bright, 1 = dark
 const ColorFactor = {
     [BrightMode.Speed_Darkens]: (p: Particle) => Math.min(MAX_SPEED, p.speed) / MAX_SPEED,
     [BrightMode.Speed_Brightens]: (p: Particle) => 1 - (Math.min(MAX_SPEED, p.speed) / MAX_SPEED),
-    [BrightMode.Down_Brightens]: (p: Particle) => p.dy <= 0 ? 1 : Math.min(MAX_MOVE, p.dy) / p.dy,
-    [BrightMode.Up_Brightens]: (p: Particle) => p.dy >= 0 ? 1 : Math.min(MAX_MOVE, -p.dy) / -p.dy,
-    [BrightMode.Right_Brightens]: (p: Particle) => p.dx <= 0 ? 1 : Math.min(MAX_MOVE, p.dx) / p.dx,
-    [BrightMode.Left_Brightens]: (p: Particle) => p.dx >= 0 ? 1 : Math.min(MAX_MOVE, -p.dx) / -p.dx,
+    [BrightMode.Down_Brightens]: (p: Particle) => p.dy >= 0 ? 1 : Math.min(MAX_MOVE, -p.dy) / -p.dy,
+    [BrightMode.Up_Brightens]: (p: Particle) => p.dy <= 0 ? 1 : Math.min(MAX_MOVE, p.dy) / p.dy,
+    [BrightMode.Right_Brightens]: (p: Particle) => p.dx >= 0 ? 1 : Math.min(MAX_MOVE, -p.dx) / -p.dx,
+    [BrightMode.Left_Brightens]: (p: Particle) => p.dx <= 0 ? 1 : Math.min(MAX_MOVE, p.dx) / p.dx,
     [BrightMode.Age_Darkens]: (p: Particle) => p.age > p.life ? 1 : p.age / p.life,
     [BrightMode.Age_Brightens]: (p: Particle) => p.age > p.life ? 0 : 1 - (p.age / p.life),
 }
