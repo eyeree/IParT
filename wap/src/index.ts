@@ -18,6 +18,10 @@ import { Size } from './Size';
 window.onhashchange = () => window.location.reload();
 
 window.onload = () => {
+    setTimeout(run, 100)
+}
+
+const run = () => {
 
     const canvas = document.createElement("canvas");
     document.body.appendChild(canvas);

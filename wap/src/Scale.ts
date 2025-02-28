@@ -17,6 +17,13 @@ export class Scale {
 
             const rect = context.canvas.getBoundingClientRect();
 
+            if (rect.width == 0 || rect.height == 0) {
+                if(DEBUG) {
+                    console.log("[Scale] ignoring", rect.width, rect.height);
+                }
+                return;
+            }
+
             const dx = rect.width / this.width;
             const dy = rect.height / this.height;
 

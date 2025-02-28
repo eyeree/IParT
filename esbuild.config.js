@@ -30,7 +30,10 @@ if(mode == "watch") {
 }
 
 const serveOptions = {
-    servedir: "wap"
+    servedir: "wap",
+    host: '127.0.0.1',
+    port: 8000,
+
 }
 
 function error(reason) {
@@ -40,11 +43,9 @@ function error(reason) {
 
 function success(result) {
     console.log(result)
-    var os = require('os');
-
-    var networkInterfaces = os.networkInterfaces();
-    
-    console.log(networkInterfaces);
+    // var os = require('os');
+    // var networkInterfaces = os.networkInterfaces();
+    // console.log(networkInterfaces);
 }
 
 switch(mode) {
