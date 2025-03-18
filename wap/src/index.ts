@@ -18,7 +18,7 @@ import { Size } from './Size';
 window.onhashchange = () => window.location.reload();
 
 window.onload = () => {
-    setTimeout(run, 100)
+    setTimeout(run, 500)
 }
 
 const run = () => {
